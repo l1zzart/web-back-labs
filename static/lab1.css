@@ -1,0 +1,13 @@
+body {
+    background-color: rgb(143, 189, 180);
+    color: blanchedalmond;
+    text-align: center;
+}
+
+img {
+    height: auto;
+    width: 350px;
+    border: 2px solid grey;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgb(62, 62, 62);
+}
