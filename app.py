@@ -7,6 +7,25 @@ def not_found(err):
     return "нет такой страницы", 404
 
 @app.route("/")
+@app.route("/index")
+def index():
+    return """<!doctype html>
+        <html>
+            <head>
+                <title>НГТУ, ФБ, Лабораторные работы</title>
+            </head>
+            <body>
+                <h1>НГТУ, ФБ, WEB-программирование, часть 2. Список лабораторных</h1>
+                <ul>
+                    <li><a href='/lab1'>Первая лабораторная</a></li>
+                </ul>
+                <hr>
+                <footer>
+                    Артемченко Елизавета Сергеевна, ФБИ-33, 3 курс, 2025 год
+                </footer>
+            </body" 
+        </html>"""
+
 @app.route("/lab1/web")
 def web():
     return """<!doctype html>
