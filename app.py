@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.errorhandler(404)
 def not_found(err):
-    return "нет такой страницы", 404
+    return redirect("/lab1/404")
 
 @app.route("/lab1")
 def lab1():
@@ -85,7 +85,12 @@ def image():
                 <h1>Дуб</h1>
                 <img src="{path}">
             </body>
-        </html>"""
+        </html>""", 200, {
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Language": "ru-Ru",
+            "X-My-Header-1": "Lab 1",
+            "X-My-Header-2": "Artemchenko E.S."
+            }
 
 count = 0
 
