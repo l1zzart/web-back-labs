@@ -20,11 +20,30 @@ def lab1():
                 сознательно предоставляющих лишь самые базовые возможности.
                 <br>
                 <a href="/">На главную</a>
-            </body" 
+                <h2>Список роутов</h2>
+                <ul>
+                    <li><a href="/lab1/index">/labl/index</a></li>
+                    <li><a href="/lab1/web">/labl/web</a></li>
+                    <li><a href="/lab1/author">/labl/author</a></li>
+                    <li><a href="/lab1/image">/labl/image</a></li>
+                    <li><a href="/lab1/counter">/labl/counter</a></li>
+                    <li><a href="/lab1/reset_counter">/labl/reset_counter</a></li>
+                    <li><a href="/lab1/info">/labl/info</a></li>
+                    <li><a href="/lab1/created">/labl/created</a></li>
+                    <li><a href="/lab1/400">/labl/400</a></li>
+                    <li><a href="/lab1/401">/labl/401</a></li>
+                    <li><a href="/lab1/402">/labl/402</a></li>
+                    <li><a href="/lab1/403">/labl/403</a></li>
+                    <li><a href="/lab1/404">/labl/404</a></li>
+                    <li><a href="/lab1/405">/labl/405</a></li>
+                    <li><a href="/lab1/418">/labl/418</a></li>
+                    <li><a href="/lab1/500">/labl/500</a></li>
+                </ul>
+            </body>
         </html>"""
 
 @app.route("/")
-@app.route("/index")
+@app.route("/lab1/index")
 def index():
     return """<!doctype html>
         <html>
@@ -121,7 +140,7 @@ def reset_counter():
     count = 0
     return redirect("/lab1/counter")
 
-@app.route('/lab1/info ')
+@app.route('/lab1/info')
 def info():
     return redirect("/lab1/author")
 
