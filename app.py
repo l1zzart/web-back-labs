@@ -147,6 +147,26 @@ def error_402():
 def error_403():
     return "<h1>403 Forbidden</h1><p>Доступ запрещен</p>", 403
 
+@app.route("/lab1/404")
+def error_404():
+    css = url_for("static", filename="error.css")
+    img_path = url_for("static", filename="UFO.png")
+    return f"""<!doctype html>
+        <html>
+            <head>
+                <link rel="stylesheet" href="{css}">
+                <title>404 Not Found</title>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>404</h1>
+                    <p>LOOKS LIKE YOURE LOST!</p>
+                    <a href="/">GO BACK TO THE HOME PAGE</a>
+                    <img src="{img_path}" alt="UFO" class="ufo-image">
+                </div>
+            </body>
+        </html>"""
+
 @app.route("/lab1/405")
 def error_405():
     return "<h1>405 Method Not Allowed</h1><p>Метод не разрешен</p>", 405
