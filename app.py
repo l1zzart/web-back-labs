@@ -171,11 +171,28 @@ def error_402():
 def error_403():
     return "<h1>403 Forbidden</h1><p>Доступ запрещен</p>", 403
 
+access_log = []
+
 @app.route("/lab1/404")
 def error_404():
+    global access_log
+    ip_address = request.remote_addr
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    requested_url = request.url
+    root_url = url_for('index', _external=True) 
+    
+    log_entry = f"IP: {ip_address}, Дата/Время: {current_time}, URL: {requested_url}"
+    access_log.append(log_entry)
+    
     css = url_for("static", filename="error.css")
     img_path = url_for("static", filename="UFO.png")
-    return f"""<!doctype html>
+
+    log_html = "<h2>Лог посещений:</h2><ul>"
+    for log in access_log:
+        log_html += f"<li>{log}</li>"
+    log_html += "</ul>"
+
+    html = f"""<!doctype html>
         <html>
             <head>
                 <link rel="stylesheet" href="{css}">
@@ -185,11 +202,16 @@ def error_404():
                 <div class="container">
                     <h1>404</h1>
                     <p>LOOKS LIKE YOURE LOST!</p>
-                    <a href="/">GO BACK TO THE HOME PAGE</a>
+                    <p>Ваш IP-адрес: {ip_address}</p>
+                    <p>Дата доступа: {current_time}</p>
+                    <p><a href="{root_url}">GO BACK TO THE HOME PAGE</a></p>
                     <img src="{img_path}" alt="UFO" class="ufo-image">
                 </div>
+                <hr>
+                {log_html}
             </body>
         </html>"""
+    return html
 
 @app.route("/lab1/405")
 def error_405():
