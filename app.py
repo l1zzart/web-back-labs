@@ -174,3 +174,21 @@ def error_405():
 @app.route("/lab1/418")
 def error_418():
     return "<h1>418 I'M A TEAPOT</h1><p>Я ЧАЙНИК</p>", 418
+
+@app.route("/lab1/500")
+def error_500():
+    x = 1 / 0
+    return f"Ответ: {x}"
+
+@app.errorhandler(500)
+def internal_error(err):
+    return f"""<!doctype html>
+        <html>
+            <head>
+                <title>Ошибка сервера</title>
+            </head>
+            <body>
+                <h1 style="color: red;">500 - ВНУТРЕННЯЯ ОШИБКА СЕРВЕРА</h1>
+                <p style="font-size: 20px;">Упс, на сервере произошла непредвиденная ошибка. Попробуйте позже...</p>
+            </body>
+        </html>"""
