@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Библиотека</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .book {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-left: 4px solid #3498db;
+        }
+        .book-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        .book-author {
+            color: #e74c3c;
+            margin-bottom: 3px;
+        }
+        .book-meta {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+        .total {
+            text-align: center;
+            background: #ecf0f1;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Библиотека книг</h1>
+    
+    <div class="total">
+        Всего книг в библиотеке: <strong>{{ books|length }}</strong>
+    </div>
+    
+    {% for book in books %}
+    <div class="book">
+        <div class="book-title">{{ book.title }}</div>
+        <div class="book-author">Автор: {{ book.author }}</div>
+        <div class="book-meta">
+            Жанр: {{ book.genre }} | Страниц: {{ book.pages }}
+        </div>
+    </div>
+    {% endfor %}
+</body>
+</html>

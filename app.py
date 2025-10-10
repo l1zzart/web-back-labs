@@ -390,3 +390,21 @@ def calc(a, b):
     </body>
 </html>
 '''
+books_list = [
+    {'id': 1, 'author': 'Фёдор Достоевский', 'title': 'Преступление и наказание', 'genre': 'Роман', 'pages': 671},
+    {'id': 2, 'author': 'Лев Толстой', 'title': 'Война и мир', 'genre': 'Роман-эпопея', 'pages': 1225},
+    {'id': 3, 'author': 'Антон Чехов', 'title': 'Рассказы', 'genre': 'Рассказы', 'pages': 350},
+    {'id': 4, 'author': 'Михаил Булгаков', 'title': 'Мастер и Маргарита', 'genre': 'Роман', 'pages': 480},
+    {'id': 5, 'author': 'Александр Пушкин', 'title': 'Евгений Онегин', 'genre': 'Роман в стихах', 'pages': 240},
+    {'id': 6, 'author': 'Николай Гоголь', 'title': 'Мёртвые души', 'genre': 'Поэма', 'pages': 352},
+    {'id': 7, 'author': 'Иван Тургенев', 'title': 'Отцы и дети', 'genre': 'Роман', 'pages': 283},
+    {'id': 8, 'author': 'Александр Островский', 'title': 'Гроза', 'genre': 'Драма', 'pages': 120},
+    {'id': 9, 'author': 'Михаил Лермонтов', 'title': 'Герой нашего времени', 'genre': 'Роман', 'pages': 224},
+    {'id': 10, 'author': 'Иван Гончаров', 'title': 'Обломов', 'genre': 'Роман', 'pages': 400},
+    {'id': 11, 'author': 'Александр Грибоедов', 'title': 'Горе от ума', 'genre': 'Комедия', 'pages': 160},
+    {'id': 12, 'author': 'Николай Лесков', 'title': 'Левша', 'genre': 'Повесть', 'pages': 96}
+]
+
+@app.route('/lab2/books')
+def books():
+    return render_template('books.html', books=books_list)
