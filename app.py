@@ -356,3 +356,37 @@ def lab2():
 def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
     return render_template('filter.html', phrase = phrase)
+
+@app.route('/lab2/calc/')
+def calc_default():
+    return redirect('/lab2/calc/1/1')
+
+@app.route('/lab2/calc/<int:a>')
+def calc_single(a):
+    return redirect(f'/lab2/calc/{a}/1')
+
+@app.route('/lab2/calc/<int:a>/<int:b>')
+def calc(a, b):
+    return f'''
+<!doctype html>
+<html>
+    <head>
+        <title>Калькулятор</title>
+    </head>
+    <body>
+        <h1>Расчёт с параметрами:</h1>
+        <p>{a} + {b} = <strong>{a + b}</strong></p>
+        <p>{a} - {b} = <strong>{a - b}</strong></p>
+        <p>{a} × {b} = <strong>{a * b}</strong></p>
+        <p>{a} / {b} = <strong>{a / b if b != 0 else 'Ошибка: деление на ноль!'}</strong></p>
+        <p>{a}<sup>{b}</sup> = <strong>{a ** b}</strong></p>
+        
+        <h2>Попробуйте другие числа:</h2>
+        <ul>
+            <li><a href="/lab2/calc/5/2">5 и 2</a></li>
+            <li><a href="/lab2/calc/10/3">10 и 3</a></li>
+            <li><a href="/lab2/calc/8/8">8 и 8</a></li>
+        </ul>
+    </body>
+</html>
+'''
