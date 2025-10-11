@@ -408,3 +408,110 @@ books_list = [
 @app.route('/lab2/books')
 def books():
     return render_template('books.html', books=books_list)
+
+fl = [
+    {
+        'name': 'Роза',
+        'description': 'Королева цветов, символ любви и красоты',
+        'image': 'rose.jpg'
+    },
+    {
+        'name': 'Тюльпан', 
+        'description': 'Весенний цветок, символ Голландии',
+        'image': 'tulip.jpg'
+    },
+    {
+        'name': 'Орхидея',
+        'description': 'Экзотический цветок с уникальной формой',
+        'image': 'orchid.jpg'
+    },
+    {
+        'name': 'Подсолнух',
+        'description': 'Солнечный цветок, который поворачивается за солнцем',
+        'image': 'sunflower.jpg'
+    },
+    {
+        'name': 'Ландыш',
+        'description': 'Нежный ароматный цветок в форме колокольчиков',
+        'image': 'lily_of_the_valley.jpg'
+    },
+    {
+        'name': 'Лаванда',
+        'description': 'Ароматное растение с успокаивающим запахом',
+        'image': 'lavender.jpg'
+    },
+    {
+        'name': 'Хризантема',
+        'description': 'Осенний цветок, символ долголетия',
+        'image': 'chrysanthemum.jpg'
+    },
+    {
+        'name': 'Пион',
+        'description': 'Пышный цветок с богатыми лепестками',
+        'image': 'peony.jpg'
+    },
+    {
+        'name': 'Нарцисс',
+        'description': 'Весенний цветок с легким ароматом',
+        'image': 'daffodil.jpg'
+    },
+    {
+        'name': 'Ирис',
+        'description': 'Цветок с необычной формой, назван в честь богини радуги',
+        'image': 'iris.jpg'
+    },
+    {
+        'name': 'Георгин',
+        'description': 'Яркий цветок с множеством лепестков',
+        'image': 'dahlia.jpg'
+    },
+    {
+        'name': 'Гладиолус',
+        'description': 'Высокий цветок с соцветиями вдоль стебля',
+        'image': 'gladiolus.jpg'
+    },
+    {
+        'name': 'Фиалка',
+        'description': 'Небольшой скромный цветок с приятным ароматом',
+        'image': 'violet.jpg'
+    },
+    {
+        'name': 'Лотос',
+        'description': 'Священный цветок в Азии, растет в воде',
+        'image': 'lotus.jpg'
+    },
+    {
+        'name': 'Мак',
+        'description': 'Яркий цветок с нежными лепестками',
+        'image': 'poppy.jpg'
+    },
+    {
+        'name': 'Гвоздика',
+        'description': 'Цветок с зубчатыми лепестками',
+        'image': 'carnation.jpg'
+    },
+    {
+        'name': 'Фрезия',
+        'description': 'Изящный ароматный цветок для букетов',
+        'image': 'freesia.jpg'
+    },
+    {
+        'name': 'Астра',
+        'description': 'Осенний цветок в форме звезды',
+        'image': 'aster.jpg'
+    },
+    {
+        'name': 'Гортензия',
+        'description': 'Пышный цветок с крупными соцветиями',
+        'image': 'hydrangea.jpg'
+    },
+    {
+        'name': 'Калла',
+        'description': 'Элегантный цветок для свадебных букетов',
+        'image': 'calla_lily.jpg'
+    }
+]
+
+@app.route('/lab2/fl_catalog')
+def show_fl():
+    return render_template('fl.html', fl=fl)
