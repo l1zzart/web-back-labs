@@ -4,27 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Библиотека</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f9f9f9;
-        }
-        h1 {
-            color: #2c3e50;
-            text-align: center;
-            border-bottom: 2px solid #3498db;
-            padding-bottom: 10px;
-        }
         .book {
-            background: white;
+            background: rgb(212, 177, 252);
             padding: 15px;
             margin: 10px 0;
             border-radius: 5px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            border-left: 4px solid #3498db;
+            border-left: 4px solid #281B47;
         }
         .book-title {
             font-size: 18px;
@@ -33,7 +21,7 @@
             margin-bottom: 5px;
         }
         .book-author {
-            color: #e74c3c;
+            color: #bf3ce7;
             margin-bottom: 3px;
         }
         .book-meta {
@@ -44,26 +32,31 @@
             text-align: center;
             background: #ecf0f1;
             padding: 10px;
-            border-radius: 5px;
+            border-radius: 10px;
             margin-bottom: 20px;
+            width: 500px;
+            margin-left: auto;
+            margin-right: auto;
         }
     </style>
 </head>
 <body>
-    <h1>Библиотека книг</h1>
-    
-    <div class="total">
-        Всего книг в библиотеке: <strong>{{ books|length }}</strong>
-    </div>
-    
-    {% for book in books %}
-    <div class="book">
-        <div class="book-title">{{ book.title }}</div>
-        <div class="book-author">Автор: {{ book.author }}</div>
-        <div class="book-meta">
-            Жанр: {{ book.genre }} | Страниц: {{ book.pages }}
+
+    <header>Библиотека книг</header>
+    <main>
+        <div class="total">
+            Всего книг в библиотеке: <strong>{{ books|length }}</strong>
         </div>
-    </div>
-    {% endfor %}
+        
+        {% for book in books %}
+        <div class="book">
+            <div class="book-title">{{ book.title }}</div>
+            <div class="book-author">Автор: {{ book.author }}</div>
+            <div class="book-meta">
+                Жанр: {{ book.genre }} | Страниц: {{ book.pages }}
+            </div>
+        </div>
+        {% endfor %}
+    </main>
 </body>
 </html>
