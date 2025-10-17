@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block lab %}Все цветы{% endblock %}
+
+{% block main %}
+<h1>Список всех цветов</h1>
+<p>Всего цветов: {{ flower_list|length }}</p>
+
+{% if flower_list %}
+    {% for flower in flower_list %}
+    <div style="border-bottom: 1px solid #eee; padding: 10px 0;">
+        {{ flower.id + 1 }}. <strong>{{ flower.name }}</strong> - {{ flower.price }} руб 
+        <a href="/lab2/del_flower/{{ flower.id }}" 
+           style="color: red; margin-left: 15px;"
+           onclick="return confirm('Удалить цветок {{ flower.name }}?')">
+            удалить
+        </a>
+    </div>
+    {% endfor %}
+{% else %}
+    <p>Цветов нет в списке</p>
+{% endif %}
+
+<div style="margin: 20px 0;">
+    <a href="/lab2/clear_flowers" 
+       style="background-color: #ff4444; color: white; padding: 10px 15px; text-decoration: none; border-radius: 4px;"
+       onclick="return confirm('Удалить ВСЕ цветы?')">
+        Удалить все цветы!
+    </a>
+</div>
+
+<div style="border-top: 2px solid #ccc; padding-top: 20px;">
+    <h3>Добавить новый цветок:</h3>
+    <form method="POST">
+        <input type="text" name="flower_name" placeholder="Название цветка" required 
+               style="padding: 8px; margin-right: 10px;">
+        <input type="number" name="flower_price" placeholder="Цена" value="300" required 
+               style="padding: 8px; margin-right: 10px;">
+        <button type="submit" style="padding: 8px 15px; background-color: #4CAF50; color: white; border: none; border-radius: 4px;">
+            Добавить
+        </button>
+    </form>
+</div>
+{% endblock %}

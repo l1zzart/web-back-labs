@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block lab %}Цветок {{ flower.name }}{% endblock %}
+
+{% block main %}
+<h1>Информация о цветке</h1>
+<div style="border: 1px solid #ddd; padding: 20px; border-radius: 8px;">
+    <h2>{{ flower.name }}</h2>
+    <p><strong>Цена:</strong> {{ flower.price }} руб.</p>
+    <p><strong>ID:</strong> {{ flower.id }}</p>
+</div>
+<a href="/lab2/all_flowers" style="display: inline-block; margin-top: 15px;">Вернуться к списку цветов</a>
+{% endblock %}
