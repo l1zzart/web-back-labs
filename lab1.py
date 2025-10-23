@@ -2,7 +2,7 @@ from flask import Blueprint, url_for, request, redirect
 import datetime
 lab1 = Blueprint('lab1', __name__)
 
-@lab1.route("/lab1")
+@lab1.route("/lab1/")
 def lab():
     return """<!doctype html>
         <html>
