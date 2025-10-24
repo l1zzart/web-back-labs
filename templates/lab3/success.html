@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <h1>Спасибо!</h1>
+
+    <div class="success-message">
+        <p>Ваш заказ оплачен на сумму {{ price }} рублей, ожидайте доставку</p>
+    </div>
+
+    <div>
+        <a href="/lab3/order">Вернуться к оформлению заказа</a>
+    </div>
+{% endblock %}
