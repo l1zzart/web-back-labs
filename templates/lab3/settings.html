@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <h1>Cookies</h1>
+    <form>
+        <div>
+            <label for="color">Выберите цвет текста:</label>
+            <input type="color" id="color" name="color" value="{{ color or '' }}">
+        </div>
+
+        <div>
+            <label for="bg_color">Выберите цвет фона:</label>
+            <input type="color" id="bg_color" name="bg_color" value="{{ bg_color or '' }}">
+        </div>
+
+        <div>
+            <label for="font_size">Выберите размер шрифта:</label>
+            <select id="font_size" name="font_size">
+                <option value="10px" {% if font_size == '10px' %}selected{% endif %}>Мелкий (10px)</option>
+                <option value="15px" {% if font_size == '15px' or not font_size %}selected{% endif %}>Средний (15px)</option>
+                <option value="20px" {% if font_size == '20px' %}selected{% endif %}>Большой (20px)</option>
+                <option value="25px" {% if font_size == '25px' %}selected{% endif %}>Огромный (25px)</option>
+            </select>
+        </div>
+
+        <div>
+            <h3>Начертание шрифта:</h3>
+            <div>
+                <label>
+                    <input type="checkbox" name="font_style" value="normal" {% if font_style == 'normal' or not font_style %}checked{% endif %}>
+                    <span>Обычный</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="font_style" value="italic" {% if font_style == 'italic' %}checked{% endif %}>
+                    <span>Курсив</span>
+                </label>
+                <label>
+                    <input type="checkbox" name="font_style" value="bold" {% if font_style == 'bold' %}checked{% endif %}>
+                    <span>Жирный</span>
+                </label>
+            </div>
+        </div>  
+
+        <div>
+            <button type="submit">Применить настройки</button>
+        </div>
+    </form>
+{% endblock %}
