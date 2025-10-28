@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <h1>Железнодорожный билет оформлен!</h1>
+
+    <div style="margin-bottom: 20px;">
+        <a href="/lab3/ticket" style="color: #007bff; text-decoration: none; font-size: 1.1em;">
+            ← Оформить новый билет
+        </a>
+    </div>
+
+    <div style="border: 2px solid #ccc; padding: 20px; border-radius: 5px; background: white; max-width: 500px; margin-bottom: 30px;">
+        <h2>Проездной документ</h2>
+        <div style="background: rgba(0, 123, 255, 0.1); padding: 10px; border-radius: 4px; margin-bottom: 15px;">
+            {% if age < 18 %}
+                <div style="font-weight: bold; color: #d32f2f;">Детский билет</div>
+            {% else %}
+                <div style="font-weight: bold; color: #1976d2;">Взрослый билет</div>
+            {% endif %}
+        </div>
+
+        <h3 style="margin-bottom: 5px;">ФИО пассажира</h3>
+        <div style="margin-bottom: 10px;">{{ fio }}</div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 15px;">
+            <div>
+                <h3 style="margin-bottom: 5px;">Возраст</h3>
+                <div>{{ age }} лет</div>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 5px;">Дата</h3>
+                <div>{{ date }}</div>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 5px;">Маршрут</h3>
+                <div>{{ departure }} → {{ destination }}</div>
+            </div>
+            <div>
+                <h3 style="margin-bottom: 5px;">Место</h3>
+                <div>
+                    {% if shelf == 'lower' %}Нижняя полка
+                    {% elif shelf == 'upper' %}Верхняя полка
+                    {% elif shelf == 'side-upper' %}Верхняя боковая полка
+                    {% elif shelf == 'side-lower' %}Нижняя боковая полка
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <h3 style="margin-bottom: 5px;">Услуги</h3>
+        <div style="margin-bottom: 15px;">
+            {% if linens %}✓ Бельё<br>{% endif %}
+            {% if luggage %}✓ Багаж<br>{% endif %}
+            {% if insurance %}✓ Страховка<br>{% endif %}
+            {% if not linens and not luggage and not insurance %}—{% endif %}
+        </div>
+
+        <hr style="border: none; border-top: 1px solid #ccc; margin: 15px 0;">
+
+        <h3 style="margin-bottom: 5px;">Стоимость</h3>
+        <div style="margin-bottom: 10px;">
+            <div style="display: flex; justify-content: space-between;">
+                <span>Базовый тариф:</span>
+                <span>{{ base_price }} руб.</span>
+            </div>
+            {% if shelf_price > 0 %}
+            <div style="display: flex; justify-content: space-between;">
+                <span>Доплата за полку:</span>
+                <span>+{{ shelf_price }} руб.</span>
+            </div>
+            {% endif %}
+            {% if linens %}
+            <div style="display: flex; justify-content: space-between;">
+                <span>Бельё:</span>
+                <span>+75 руб.</span>
+            </div>
+            {% endif %}
+            {% if luggage %}
+            <div style="display: flex; justify-content: space-between;">
+                <span>Багаж:</span>
+                <span>+250 руб.</span>
+            </div>
+            {% endif %}
+            {% if insurance %}
+            <div style="display: flex; justify-content: space-between;">
+                <span>Страховка:</span>
+                <span>+150 руб.</span>
+            </div>
+            {% endif %}
+        </div>
+
+        <div style="display: flex; justify-content: space-between; font-size: 1.2em; font-weight: bold; margin-top: 10px; padding-top: 10px; border-top: 1px solid #ccc;">
+            <span>Итого:</span>
+            <span>{{ price }} руб.</span>
+        </div>
+    </div>
+{% endblock %}

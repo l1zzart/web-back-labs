@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 3{% endblock %}
+
+{% block main %}
+    <h1>Оформление железнодорожного билета</h1>
+
+    <form action="/lab3/ticket" method="POST">
+        <h2>Личные данные пассажира</h2>
+        <div style="margin-bottom: 10px;">
+            <label>ФИО пассажира:</label>
+            <input type="text" name="fio">
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Возраст:</label>
+            <input type="number" name="age">
+        </div>
+
+        <h2>Маршрут</h2>
+        <div style="margin-bottom: 3px;">
+            <label>Пункт выезда:</label>
+            <input type="text" name="departure">
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Пункт назначения:</label>
+            <input type="text" name="destination">
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>Дата поездки:</label>
+            <input type="date" name="date">
+        </div>
+
+        <h2>Тип полки</h2>
+        <div style="margin-bottom: 10px;">
+            <label>Полка:</label>
+            <select name="shelf">
+                <option value="lower">Нижняя</option>
+                <option value="upper">Верхняя</option>
+                <option value="side-upper">Верхняя боковая</option>
+                <option value="side-lower">Нижняя боковая</option>
+            </select>
+        </div>
+
+        <h2>Дополнительные услуги</h2>
+        <div>
+            <label>
+                <input type="checkbox" name="linens">С бельём (+75 руб)
+            </label>
+        </div>
+        <div style="margin-bottom: 10px;">
+            <label>
+                <input type="checkbox" name="luggage">С багажом (+250 руб)
+            </label>
+        </div>
+        <div style="margin-bottom: 20px;">
+            <label>
+                <input type="checkbox" name="insurance">Нужна страховка (+150 руб)
+            </label>
+        </div>
+
+        <div>
+            <button type="submit" style="padding: 10px 20px; background: #70aae9; color: rgb(233, 236, 249); border: none; border-radius: 4px;">
+                Оформить билет
+            </button>
+        </div>
+    </form>
+{% endblock %}

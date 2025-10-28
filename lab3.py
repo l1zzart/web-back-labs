@@ -101,3 +101,63 @@ def settings():
 
     resp = make_response(render_template('lab3/settings.html', color=color, bg_color=bg_color, font_size=font_size, font_style=font_style))
     return resp
+
+
+@lab3.route('/lab3/ticket', methods=['GET', 'POST'])
+def ticket():
+    if request.method == 'GET':
+        return render_template('lab3/ticket.html')
+    
+    fio = request.form.get('fio')
+    shelf = request.form.get('shelf')
+    linens = request.form.get('linens') == 'on'
+    luggage = request.form.get('luggage') == 'on'
+    age = request.form.get('age')
+    departure = request.form.get('departure')
+    destination = request.form.get('destination')
+    date = request.form.get('date')
+    insurance = request.form.get('insurance') == 'on'
+
+    if not all([fio, shelf, age, departure, destination, date]):
+        return "Все поля должны быть заполнены!", 400
+
+    try:
+        age = int(age)
+        if not (1 <= age <= 120):
+            return "Возраст должен быть от 1 до 120 лет!", 400
+    except ValueError:
+        return "Возраст должен быть числом!", 400
+
+    if age < 18:
+        price = 700  
+    else:
+        price = 1000  
+
+    if shelf in ['lower', 'side-lower']:
+        price += 100
+
+    if linens:
+        price += 75
+
+    if luggage:
+        price += 250
+
+    if insurance:
+        price += 150
+
+    base_price = 700 if age < 18 else 1000
+    shelf_price = 100 if shelf in ['lower', 'side-lower'] else 0
+
+    return render_template('lab3/info.html',
+                        fio=fio,
+                        shelf=shelf,
+                        linens=linens,
+                        luggage=luggage,
+                        age=age,
+                        departure=departure,
+                        destination=destination,
+                        date=date,
+                        insurance=insurance,
+                        price=price,
+                        base_price=base_price,
+                        shelf_price=shelf_price)
