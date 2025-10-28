@@ -161,3 +161,13 @@ def ticket():
                         price=price,
                         base_price=base_price,
                         shelf_price=shelf_price)
+
+
+@lab3.route('/lab3/clear')
+def clear():
+    response = make_response(redirect('/lab3/settings'))
+    response.delete_cookie('color')
+    response.delete_cookie('bg_color')
+    response.delete_cookie('font_size')
+    response.delete_cookie('font_style')
+    return response
