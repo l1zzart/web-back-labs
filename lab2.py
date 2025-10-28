@@ -27,7 +27,7 @@ def flowers(flower_id):
     flower = next((f for f in flower_list if f['id'] == flower_id), None)
     if flower is None:
         abort(404)
-    return render_template('flower_detail.html', flower=flower)
+    return render_template('lab2/flower_detail.html', flower=flower)
 
 
 @lab2.route('/lab2/all_flowers', methods=['GET', 'POST'])
@@ -49,7 +49,7 @@ def all_flowers():
         
         return redirect(url_for('all_flowers'))
     
-    return render_template('all_flowers.html', flower_list=flower_list)
+    return render_template('lab2/all_flowers.html', flower_list=flower_list)
 
 
 @lab2.route('/lab2/del_flower/<int:flower_id>')
@@ -83,7 +83,7 @@ def add_flower(name):
     flower_list.lab2end(new_flower)
     next_flower_id += 1
     
-    return render_template('add_flower.html', name=name, flower_list=flower_list)
+    return render_template('lab2/add_flower.html', name=name, flower_list=flower_list)
 
 
 @lab2.route('/lab2/example')
@@ -99,7 +99,7 @@ def example():
         {'name': 'мандарины', 'price': 95}, 
         {'name': 'манго', 'price': 321}
     ]
-    return render_template('example.html', 
+    return render_template('lab2/example.html', 
                            name=name, 
                            number=number, 
                            group=group, 
@@ -109,13 +109,13 @@ def example():
 
 @lab2.route('/lab2/')
 def lab():
-    return render_template('lab2.html')
+    return render_template('lab2/lab2.html')
 
 
 @lab2.route('/lab2/filters')
 def filters():
     phrase = "О <b>сколько</b> <u>нам</u> <i>открытий</i> чудных..."
-    return render_template('filter.html', phrase = phrase)
+    return render_template('lab2/filter.html', phrase = phrase)
 
 
 @lab2.route('/lab2/calc/')
@@ -173,113 +173,113 @@ books_list = [
 
 @lab2.route('/lab2/books')
 def books():
-    return render_template('books.html', books=books_list)
+    return render_template('lab2/books.html', books=books_list)
 
 
 fl = [
     {
         'name': 'Роза',
         'description': 'Королева цветов, символ любви и красоты',
-        'image': 'rose.jpg'
+        'image': 'lab2/rose.jpg'
     },
     {
         'name': 'Тюльпан', 
         'description': 'Весенний цветок, символ Голландии',
-        'image': 'tulip.jpg'
+        'image': 'lab2/tulip.jpg'
     },
     {
         'name': 'Орхидея',
         'description': 'Экзотический цветок с уникальной формой',
-        'image': 'orchid.jpg'
+        'image': 'lab2/orchid.jpg'
     },
     {
         'name': 'Подсолнух',
         'description': 'Солнечный цветок, который поворачивается за солнцем',
-        'image': 'sunflower.jpg'
+        'image': 'lab2/sunflower.jpg'
     },
     {
         'name': 'Ландыш',
         'description': 'Нежный ароматный цветок в форме колокольчиков',
-        'image': 'lily_of_the_valley.jpg'
+        'image': 'lab2/lily_of_the_valley.jpg'
     },
     {
         'name': 'Лаванда',
         'description': 'Ароматное растение с успокаивающим запахом',
-        'image': 'lavender.jpg'
+        'image': 'lab2/lavender.jpg'
     },
     {
         'name': 'Хризантема',
         'description': 'Осенний цветок, символ долголетия',
-        'image': 'chrysanthemum.jpg'
+        'image': 'lab2/chrysanthemum.jpg'
     },
     {
         'name': 'Пион',
         'description': 'Пышный цветок с богатыми лепестками',
-        'image': 'peony.jpg'
+        'image': 'lab2/peony.jpg'
     },
     {
         'name': 'Нарцисс',
         'description': 'Весенний цветок с легким ароматом',
-        'image': 'daffodil.jpg'
+        'image': 'lab2/daffodil.jpg'
     },
     {
         'name': 'Ирис',
         'description': 'Цветок с необычной формой, назван в честь богини радуги',
-        'image': 'iris.jpg'
+        'image': 'lab2/iris.jpg'
     },
     {
         'name': 'Георгин',
         'description': 'Яркий цветок с множеством лепестков',
-        'image': 'dahlia.jpg'
+        'image': 'lab2/dahlia.jpg'
     },
     {
         'name': 'Гладиолус',
         'description': 'Высокий цветок с соцветиями вдоль стебля',
-        'image': 'gladiolus.jpg'
+        'image': 'lab2/gladiolus.jpg'
     },
     {
         'name': 'Фиалка',
         'description': 'Небольшой скромный цветок с приятным ароматом',
-        'image': 'violet.jpg'
+        'image': 'lab2/violet.jpg'
     },
     {
         'name': 'Лотос',
         'description': 'Священный цветок в Азии, растет в воде',
-        'image': 'lotus.jpg'
+        'image': 'lab2/lotus.jpg'
     },
     {
         'name': 'Мак',
         'description': 'Яркий цветок с нежными лепестками',
-        'image': 'poppy.jpg'
+        'image': 'lab2/poppy.jpg'
     },
     {
         'name': 'Гвоздика',
         'description': 'Цветок с зубчатыми лепестками',
-        'image': 'carnation.jpg'
+        'image': 'lab2/carnation.jpg'
     },
     {
         'name': 'Фрезия',
         'description': 'Изящный ароматный цветок для букетов',
-        'image': 'freesia.jpg'
+        'image': 'lab2/freesia.jpg'
     },
     {
         'name': 'Астра',
         'description': 'Осенний цветок в форме звезды',
-        'image': 'aster.jpg'
+        'image': 'lab2/aster.jpg'
     },
     {
         'name': 'Гортензия',
         'description': 'Пышный цветок с крупными соцветиями',
-        'image': 'hydrangea.jpg'
+        'image': 'lab2/hydrangea.jpg'
     },
     {
         'name': 'Калла',
         'description': 'Элегантный цветок для свадебных букетов',
-        'image': 'calla_lily.jpg'
+        'image': 'lab2/calla_lily.jpg'
     }
 ]
 
 
 @lab2.route('/lab2/fl_catalog')
 def show_fl():
-    return render_template('fl.html', fl=fl)
+    return render_template('lab2/fl.html', fl=fl)
