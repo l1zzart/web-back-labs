@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block lab %}Заказ зерна{% endblock %}
+
+{% block main %}
+    <h1>Заказ зерна</h1>
+    
+    <form method="post">
+        <div style="margin-bottom: 15px;">
+            <label for="grain_type">Тип зерна:</label>
+            <select id="grain_type" name="grain_type">
+                <option value=""> Выберите зерно </option>
+                <option value="barley" {% if selected_grain == 'barley' %}selected{% endif %}>Ячмень (12 000 руб/т)</option>
+                <option value="oats" {% if selected_grain == 'oats' %}selected{% endif %}>Овёс (8 500 руб/т)</option>
+                <option value="wheat" {% if selected_grain == 'wheat' %}selected{% endif %}>Пшеница (9 000 руб/т)</option>
+                <option value="rye" {% if selected_grain == 'rye' %}selected{% endif %}>Рожь (15 000 руб/т)</option>
+            </select>
+        </div>
+        
+        <div style="margin-bottom: 15px;">
+            <label for="weight">Вес (тонн):</label>
+            <input type="number" id="weight" name="weight" 
+                   min="0.1" step="0.1" 
+                   value="{{ weight or '' }}" 
+                   placeholder="Введите вес">
+        </div>
+        
+        <div>
+            <button type="submit">Оформить заказ</button>
+            <a href="/lab4/grain_order" style="margin-left: 10px; text-decoration: none;">
+                <button type="button">Сбросить</button>
+            </a>
+        </div>
+    </form>
+
+    {% if error %}
+        <div style="color: red; font-weight: bold; margin: 15px 0; padding: 10px 15px; 
+                   border: 2px solid red; background-color: #ffe6e6; border-radius: 5px; 
+                   display: inline-block;">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    {% if success %}
+        <div style="margin: 20px 0; padding: 15px; border: 2px solid #4CAF50; 
+                   background-color: #f0f8f0; border-radius: 5px;">
+            <h3 style="color: #2E7D32; margin-top: 0;">Заказ успешно сформирован</h3>
+            <p>Вы заказали <strong>{{ grain_name }}</strong>.</p>
+            <p>Вес: <strong>{{ weight }} т</strong>.</p>
+            <p>Сумма к оплате: <strong>{{ "%.2f"|format(total_cost) }} руб</strong>.</p>
+            
+            {% if discount > 0 %}
+                <div style="color: #FF9800; margin-top: 10px; padding: 10px; 
+                           background-color: #fff3e0; border-radius: 4px;">
+                    <strong>Применена скидка 10% за большой объём!</strong><br>
+                    <small>Размер скидки: {{ "%.2f"|format(discount) }} руб</small>
+                </div>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div style="margin-top: 30px; padding: 15px; background-color: #f5f5f5; border-radius: 5px;">
+        <h3>Цены на зерно:</h3>
+        <ul>
+            <li><strong>Ячмень:</strong> 12 000 руб/т</li>
+            <li><strong>Овёс:</strong> 8 500 руб/т</li>
+            <li><strong>Пшеница:</strong> 9 000 руб/т</li>
+            <li><strong>Рожь:</strong> 15 000 руб/т</li>
+        </ul>
+        <p style="color: #666; font-size: 14px; margin-top: 10px;">
+            <strong>Скидка:</strong> При заказе более 10 тонн - скидка 10%<br>
+            <strong>Ограничение:</strong> Максимальный заказ - 100 тонн
+        </p>
+    </div>
+{% endblock %}
