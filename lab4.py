@@ -268,3 +268,148 @@ def grain_order():
                          total_cost=total_cost,
                          discount=discount,
                          selected_grain=grain_type)
+
+
+# Регистрация
+@lab4.route('/lab4/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'GET':
+        return render_template('lab4/register.html')
+    
+    login = request.form.get('login')
+    password = request.form.get('password')
+    password_confirm = request.form.get('password_confirm')
+    name = request.form.get('name')
+    
+    if not login or not password or not name:
+        return render_template('lab4/register.html', error='Все поля обязательны для заполнения')
+    
+    if password != password_confirm:
+        return render_template('lab4/register.html', error='Пароли не совпадают')
+    
+    for user in users:
+        if user['login'] == login:
+            return render_template('lab4/register.html', error='Пользователь с таким логином уже существует')
+    
+    new_user = {
+        'login': login,
+        'password': password,
+        'name': name,
+        'gender': request.form.get('gender', 'male')
+    }
+    users.append(new_user)
+    
+    return render_template('lab4/register.html', success='Регистрация прошла успешно! Теперь вы можете войти.')
+
+# Список пользователей
+@lab4.route('/lab4/users')
+def users_list():
+    if 'login' not in session:
+        return redirect('/lab4/login')
+    
+    users_safe = []
+    for user in users:
+        user_safe = {
+            'login': user['login'],
+            'name': user['name'],
+            'gender': user['gender'],
+            'is_current': (user['login'] == session['login'])
+        }
+        users_safe.append(user_safe)
+    
+    return render_template('lab4/users.html', users=users_safe, current_user=session['login'])
+
+# Удаление пользователя
+@lab4.route('/lab4/users/delete', methods=['POST'])
+def delete_user():
+    if 'login' not in session:
+        return redirect('/lab4/login')
+    
+    login_to_delete = request.form.get('login')
+    
+    if login_to_delete != session['login']:
+        return redirect('/lab4/users')
+    
+    global users
+    users = [user for user in users if user['login'] != login_to_delete]
+    
+    session.pop('login', None)
+    session.pop('name', None)
+    
+    return redirect('/lab4/login')
+
+# Редактирование пользователя
+@lab4.route('/lab4/users/edit', methods=['GET', 'POST'])
+def edit_user():
+    if 'login' not in session:
+        return redirect('/lab4/login')
+    
+    current_login = session['login']
+    
+    if request.method == 'GET':
+        current_user = None
+        for user in users:
+            if user['login'] == current_login:
+                current_user = user
+                break
+        
+        if not current_user:
+            return redirect('/lab4/login')
+        
+        user_safe = {
+            'login': current_user['login'],
+            'name': current_user['name'],
+            'gender': current_user['gender']
+        }
+        
+        return render_template('lab4/edit_user.html', user=user_safe)
+    
+    new_login = request.form.get('login')
+    new_name = request.form.get('name')
+    new_password = request.form.get('password')
+    password_confirm = request.form.get('password_confirm')
+    gender = request.form.get('gender', 'male')
+    
+    if not new_login or not new_name:
+        current_user = next((user for user in users if user['login'] == current_login), None)
+        user_safe = {
+            'login': current_user['login'],
+            'name': current_user['name'],
+            'gender': current_user['gender']
+        } if current_user else {}
+        return render_template('lab4/edit_user.html', user=user_safe, error='Логин и имя обязательны для заполнения')
+    
+    if new_login != current_login:
+        for user in users:
+            if user['login'] == new_login:
+                current_user = next((user for user in users if user['login'] == current_login), None)
+                user_safe = {
+                    'login': current_user['login'],
+                    'name': current_user['name'],
+                    'gender': current_user['gender']
+                } if current_user else {}
+                return render_template('lab4/edit_user.html', user=user_safe, error='Пользователь с таким логином уже существует')
+    
+    if new_password:
+        if new_password != password_confirm:
+            current_user = next((user for user in users if user['login'] == current_login), None)
+            user_safe = {
+                'login': current_user['login'],
+                'name': current_user['name'],
+                'gender': current_user['gender']
+            } if current_user else {}
+            return render_template('lab4/edit_user.html', user=user_safe, error='Пароли не совпадают')
+    
+    for user in users:
+        if user['login'] == current_login:
+            user['login'] = new_login
+            user['name'] = new_name
+            user['gender'] = gender
+            if new_password:
+                user['password'] = new_password
+            break
+    
+    session['login'] = new_login
+    session['name'] = new_name
+    
+    return redirect('/lab4/users')
