@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block lab %}Холодильник{% endblock %}
+
+{% block main %}
+    <h1>Холодильник</h1>
+    <p>Установите температуру холодильника (от -12°C до -1°C)</p>
+    
+    <form method="post">
+        <div>
+            <label for="temperature">Температура (°C):</label>
+            <input type="number" id="temperature" name="temperature" 
+                   min="-50" max="50" step="1" 
+                   value="{{ temperature or '' }}" 
+                   placeholder="Введите температуру">
+        </div>
+        <div>
+            <button type="submit">Установить температуру</button>
+            <a href="/lab4/fridge" style="margin-left: 10px; text-decoration: none;">
+                <button type="button">Сбросить</button>
+            </a>
+        </div>
+    </form>
+
+    {% if error %}
+        <div style="color: red; font-weight: bold; margin: 15px 0; padding: 10px 15px; 
+                   border: 2px solid red; background-color: #ffe6e6; border-radius: 5px; 
+                   display: inline-block;">
+            {{ error }}
+        </div>
+    {% endif %}
+
+    {% if message %}
+        <div style="margin: 20px 0; padding: 15px; border: 2px solid #4CAF50; 
+                   background-color: #f0f8f0; border-radius: 5px;">
+            <h3 style="color: #2E7D32; margin-top: 0;">{{ message }}</h3>
+            
+            {% if snowflakes > 0 %}
+                <div style="font-size: 24px; color: #2196F3; margin: 10px 0;">
+                    {% for i in range(snowflakes) %}
+                        ❄️
+                    {% endfor %}
+                </div>
+                <p style="color: #666; font-size: 14px;">
+                    Количество снежинок: {{ snowflakes }}
+                </p>
+            {% endif %}
+        </div>
+    {% endif %}
+
+    <div style="margin-top: 30px; padding: 15px; background-color: #f5f5f5; border-radius: 5px;">
+        <h3>Справка по температурам:</h3>
+        <ul>
+            <li>❄️❄️❄️ От -12°C до -9°C — 3 снежинки</li>
+            <li>❄️❄️ От -8°C до -5°C — 2 снежинки</li>
+            <li>❄️ От -4°C до -1°C — 1 снежинка</li>
+        </ul>
+    </div>
+{% endblock %}
