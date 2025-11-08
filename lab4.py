@@ -270,7 +270,6 @@ def grain_order():
                          selected_grain=grain_type)
 
 
-# Регистрация
 @lab4.route('/lab4/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'GET':
@@ -301,7 +300,7 @@ def register():
     
     return render_template('lab4/register.html', success='Регистрация прошла успешно! Теперь вы можете войти.')
 
-# Список пользователей
+
 @lab4.route('/lab4/users')
 def users_list():
     if 'login' not in session:
@@ -319,7 +318,7 @@ def users_list():
     
     return render_template('lab4/users.html', users=users_safe, current_user=session['login'])
 
-# Удаление пользователя
+
 @lab4.route('/lab4/users/delete', methods=['POST'])
 def delete_user():
     if 'login' not in session:
@@ -338,7 +337,7 @@ def delete_user():
     
     return redirect('/lab4/login')
 
-# Редактирование пользователя
+
 @lab4.route('/lab4/users/edit', methods=['GET', 'POST'])
 def edit_user():
     if 'login' not in session:
