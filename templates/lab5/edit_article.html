@@ -4,7 +4,7 @@
 
 {% block main %}
     <style>
-        .create-form {
+        .edit-form {
             max-width: 600px;
             margin: 0 auto;
         }
@@ -28,7 +28,7 @@
             resize: vertical;
         }
         .submit-btn {
-            background-color: #8358b9;
+            background-color: #4CAF50;
             color: white;
             padding: 10px 20px;
             border: none;
@@ -45,23 +45,24 @@
         }
     </style>
 
-    <h1>Создание статьи</h1>
+    <h1>Редактирование статьи</h1>
 
     {% if error %}
         <div class="error">{{ error }}</div>
     {% endif %}
 
-    <form method="post" class="create-form">
+    <form method="post" class="edit-form">
         <div class="form-group">
             <label for="title">Название статьи:</label>
-            <input type="text" id="title" name="title" maxlength="50" required>
+            <input type="text" id="title" name="title" value="{{ article['title'] }}" maxlength="50" required>
         </div>
         <div class="form-group">
             <label for="article_text">Текст статьи:</label>
-            <textarea id="article_text" name="article_text" required></textarea>
+            <textarea id="article_text" name="article_text" required>{{ article['article_text'] }}</textarea>
         </div>
         <div class="form-group">
-            <button type="submit" class="submit-btn">Создать статью</button>
+            <button type="submit" class="submit-btn">Сохранить изменения</button>
+            <a href="/lab5/list" style="margin-left: 10px;">Отмена</a>
         </div>
     </form>
 {% endblock %}

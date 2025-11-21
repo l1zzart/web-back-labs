@@ -41,16 +41,37 @@
         }
 
         .username {
-            color: #333333; 
+            color: #333333;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            margin-left: 10px;
+        }
+
+        .logout-btn:hover {
+            background-color: #ff5252;
         }
     </style>
+    
     <h1>База знаний</h1>
     <div class="lab5-menu">
         <div class="nav-links">
             <a href="/lab5/list">Список статей</a>
             <a href="/lab5/create">Создать статью</a>
-            <a href="/lab5/login">Войти</a>
-            <a href="/lab5/register">Регистрация</a>
+            {% if login %}
+                <a href="/lab5/logout" class="logout-btn">Выйти</a>
+            {% else %}
+                <a href="/lab5/login">Войти</a>
+                <a href="/lab5/register">Регистрация</a>
+            {% endif %}
         </div>
         <div class="username">
             {% if login %}
