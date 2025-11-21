@@ -65,8 +65,10 @@
     <div class="lab5-menu">
         <div class="nav-links">
             <a href="/lab5/list">Список статей</a>
-            <a href="/lab5/create">Создать статью</a>
             {% if login %}
+                <a href="/lab5/create">Создать статью</a>
+                <a href="/lab5/users">Список пользователей</a>
+                <a href="/lab5/profile">Профиль</a>
                 <a href="/lab5/logout" class="logout-btn">Выйти</a>
             {% else %}
                 <a href="/lab5/login">Войти</a>

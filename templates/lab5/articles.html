@@ -11,6 +11,10 @@
             margin-bottom: 20px;
             background-color: #f9f9f9;
         }
+        .article.favorite {
+            border-left: 5px solid #ffd700;
+            background-color: #fff9e6;
+        }
         .article h2 {
             color: #333;
             margin-top: 0;
@@ -48,26 +52,56 @@
             border-radius: 4px;
             margin-top: 10px;
         }
+        .article-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        .favorite-badge {
+            background-color: #ffd700;
+            color: #333;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+        .public-badge {
+            background-color: #4CAF50;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
     </style>
 
-    <h1>Мои статьи</h1>
+    <h1>{% if login %}Мои статьи{% else %}Публичные статьи{% endif %}</h1>
 
     {% if articles %}
         {% for article in articles %}
-            <div class="article">
+            <div class="article {% if article['is_favorite'] %}favorite{% endif %}">
+                <div class="article-meta">
+                    Автор: {{ article['author_login'] }}
+                    {% if article['is_favorite'] %}<span class="favorite-badge">★ Избранная</span>{% endif %}
+                    {% if article['is_public'] %}<span class="public-badge">🌐 Публичная</span>{% endif %}
+                </div>
                 <h2>{{ article['title'] }}</h2>
                 <p>{{ article['article_text'] | replace('\n', '<br>') | safe }}</p>
+                {% if login and article['author_login'] == login %}
                 <div class="article-actions">
                     <a href="/lab5/edit/{{ article['id'] }}" class="edit-btn">Редактировать</a>
                     <a href="/lab5/delete/{{ article['id'] }}" class="delete-btn" 
                        onclick="return confirm('Вы уверены, что хотите удалить эту статью?')">Удалить</a>
                 </div>
+                {% endif %}
             </div>
         {% endfor %}
     {% else %}
         <div class="no-articles">
-            <p>У вас пока нет статей</p>
+            <p>{% if login %}У вас пока нет статей{% else %}Нет публичных статей{% endif %}</p>
+            {% if login %}
             <a href="/lab5/create" class="create-link">Создать первую статью</a>
+            {% endif %}
         </div>
     {% endif %}
 {% endblock %}

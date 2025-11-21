@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 5{% endblock %}
+
+{% block main %}
+    <style>
+        .users-list {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .user-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            background-color: #f9f9f9;
+        }
+        .user-login {
+            font-weight: bold;
+            color: #333;
+        }
+        .user-name {
+            color: #666;
+            margin-left: 10px;
+        }
+        .no-name {
+            color: #999;
+            font-style: italic;
+        }
+    </style>
+
+    <h1>Список пользователей</h1>
+
+    <div class="users-list">
+        {% for user in users %}
+            <div class="user-card">
+                <span class="user-login">{{ user['login'] }}</span>
+                <span class="user-name">
+                    {% if user['full_name'] %}
+                        - {{ user['full_name'] }}
+                    {% else %}
+                        <span class="no-name">(имя не указано)</span>
+                    {% endif %}
+                </span>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div style="margin-top: 20px;">
+        <a href="/lab5/">На главную</a>
+    </div>
+{% endblock %}
