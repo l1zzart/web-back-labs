@@ -4,8 +4,6 @@ from psycopg2.extras import RealDictCursor
 from werkzeug.security import check_password_hash, generate_password_hash
 import sqlite3
 from os import path
-
-
 lab5 = Blueprint('lab5', __name__)
 
 @lab5.route('/lab5/')
@@ -33,7 +31,6 @@ def db_connect():
     return conn, cur
 
 def db_close(conn, cur):
-    conn.commit()
     cur.close()
     conn.close()
 
