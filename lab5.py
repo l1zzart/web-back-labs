@@ -140,12 +140,12 @@ def create():
 
     if current_app.config['DB_TYPE'] == 'postgres':
         cur.execute("""
-            INSERT INTO articles (user_id, title, article_text, is_favorite, is_public) 
+            INSERT INTO articles (login_id, title, article_text, is_favorite, is_public) 
             VALUES (%s, %s, %s, %s, %s)
         """, (login_id, title.strip(), article_text.strip(), is_favorite, is_public))
     else:
         cur.execute("""
-            INSERT INTO articles (user_id, title, article_text, is_favorite, is_public) 
+            INSERT INTO articles (login_id, title, article_text, is_favorite, is_public) 
             VALUES (?, ?, ?, ?, ?)
         """, (login_id, title.strip(), article_text.strip(), is_favorite, is_public))
     
@@ -173,16 +173,16 @@ def list_articles():
                 cur.execute("""
                     SELECT a.*, u.login as author_login 
                     FROM articles a 
-                    JOIN users u ON a.user_id = u.id 
-                    WHERE a.user_id = %s OR a.is_public = true 
+                    JOIN users u ON a.login_id = u.id 
+                    WHERE a.login_id = %s OR a.is_public = true 
                     ORDER BY a.is_favorite DESC, a.id DESC;
                 """, (login_id,))
             else:
                 cur.execute("""
                     SELECT a.*, u.login as author_login 
                     FROM articles a 
-                    JOIN users u ON a.user_id = u.id 
-                    WHERE a.user_id = ? OR a.is_public = true 
+                    JOIN users u ON a.login_id = u.id 
+                    WHERE a.login_id = ? OR a.is_public = true 
                     ORDER BY a.is_favorite DESC, a.id DESC;
                 """, (login_id,))
         else:
@@ -190,7 +190,7 @@ def list_articles():
                 cur.execute("""
                     SELECT a.*, u.login as author_login 
                     FROM articles a 
-                    JOIN users u ON a.user_id = u.id 
+                    JOIN users u ON a.login_id = u.id 
                     WHERE a.is_public = true 
                     ORDER BY a.is_favorite DESC, a.id DESC;
                 """)
@@ -198,7 +198,7 @@ def list_articles():
                 cur.execute("""
                     SELECT a.*, u.login as author_login 
                     FROM articles a 
-                    JOIN users u ON a.user_id = u.id 
+                    JOIN users u ON a.login_id = u.id 
                     WHERE a.is_public = true 
                     ORDER BY a.is_favorite DESC, a.id DESC;
                 """)
@@ -207,7 +207,7 @@ def list_articles():
             cur.execute("""
                 SELECT a.*, u.login as author_login 
                 FROM articles a 
-                JOIN users u ON a.user_id = u.id 
+                JOIN users u ON a.login_id = u.id 
                 WHERE a.is_public = true 
                 ORDER BY a.is_favorite DESC, a.id DESC;
             """)
@@ -215,7 +215,7 @@ def list_articles():
             cur.execute("""
                 SELECT a.*, u.login as author_login 
                 FROM articles a 
-                JOIN users u ON a.user_id = u.id 
+                JOIN users u ON a.login_id = u.id 
                 WHERE a.is_public = true 
                 ORDER BY a.is_favorite DESC, a.id DESC;
             """)
@@ -236,13 +236,13 @@ def edit_article(article_id):
     if current_app.config['DB_TYPE'] == 'postgres':
         cur.execute("""
             SELECT a.* FROM articles a 
-            JOIN users u ON a.user_id = u.id 
+            JOIN users u ON a.login_id = u.id 
             WHERE a.id = %s AND u.login = %s;
         """, (article_id, login))
     else:
         cur.execute("""
             SELECT a.* FROM articles a 
-            JOIN users u ON a.user_id = u.id 
+            JOIN users u ON a.login_id = u.id 
             WHERE a.id = ? AND u.login = ?;
         """, (article_id, login))
     
@@ -293,13 +293,13 @@ def delete_article(article_id):
     if current_app.config['DB_TYPE'] == 'postgres':
         cur.execute("""
             SELECT a.* FROM articles a 
-            JOIN users u ON a.user_id = u.id 
+            JOIN users u ON a.login_id = u.id 
             WHERE a.id = %s AND u.login = %s;
         """, (article_id, login))
     else:
         cur.execute("""
             SELECT a.* FROM articles a 
-            JOIN users u ON a.user_id = u.id 
+            JOIN users u ON a.login_id = u.id 
             WHERE a.id = ? AND u.login = ?;
         """, (article_id, login))
     
