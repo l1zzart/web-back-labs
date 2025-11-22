@@ -43,6 +43,16 @@
             border: 1px solid red;
             border-radius: 4px;
         }
+        .checkbox-group {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
     </style>
 
     <h1>Создание статьи</h1>
@@ -60,6 +70,18 @@
             <label for="article_text">Текст статьи:</label>
             <textarea id="article_text" name="article_text" required></textarea>
         </div>
+        
+        <div class="checkbox-group">
+            <div class="checkbox-item">
+                <input type="checkbox" id="is_favorite" name="is_favorite" value="1">
+                <label for="is_favorite">Избранная статья</label>
+            </div>
+            <div class="checkbox-item">
+                <input type="checkbox" id="is_public" name="is_public" value="1">
+                <label for="is_public">Публичная статья</label>
+            </div>
+        </div>
+
         <div class="form-group">
             <button type="submit" class="submit-btn">Создать статью</button>
         </div>
