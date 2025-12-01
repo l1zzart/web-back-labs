@@ -82,8 +82,8 @@
             <div class="article {% if article['is_favorite'] %}favorite{% endif %}">
                 <div class="article-meta">
                     Автор: {{ article['author_login'] }}
-                    {% if article['is_favorite'] %}<span class="favorite-badge">★ Избранная</span>{% endif %}
-                    {% if article['is_public'] %}<span class="public-badge">🌐 Публичная</span>{% endif %}
+                    {% if article['is_favorite'] %}<span class="favorite-badge"> Избранная</span>{% endif %}
+                    {% if article['is_public'] %}<span class="public-badge"> Публичная</span>{% endif %}
                 </div>
                 <h2>{{ article['title'] }}</h2>
                 <p>{{ article['article_text'] | replace('\n', '<br>') | safe }}</p>
