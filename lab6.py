@@ -4,11 +4,12 @@ lab6 = Blueprint('lab6', __name__)
 
 offices = []
 for i in range(1, 11):
-    offices.append({"number": i, "tenant": ""})
+    offices.append({"number": i, "tenant": "", "price": 800 + i%2})
 
 @lab6.route('/lab6/')
 def lab():
-    return render_template('lab6/lab6.html')
+    login = session.get('login', '')
+    return render_template('lab6/lab6.html', current_user=login)
 
 
 @lab6.route('/lab6/json-rpc-api/', methods = ['POST'])
@@ -22,6 +23,14 @@ def api():
             'result': offices,
             'id': id
         }
+    
+    if data['method'] == 'getCurrentUser':
+        login = session.get('login', '')
+        return {
+            'jsonrpc': '2.0',
+            'result': login,
+            'id': id
+    }
     
     login = session.get('login')
     if not login:

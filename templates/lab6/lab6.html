@@ -4,6 +4,32 @@
 
 {% block script %}
 <script>
+let currentUser = '';
+
+function getCurrentUser(callback) {
+    const url = '/lab6/json-rpc-api/';
+    const json = {
+        'jsonrpc': '2.0',
+        'method': 'getCurrentUser',
+        'id': Math.round(Math.random()*1000)
+    };
+    
+    fetch(url, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(json)
+    })
+    .then(function(response) {
+        return response.json()
+    })
+    .then(function(data) {
+        if(data.result) {
+            currentUser = data.result;
+        }
+        if(callback) callback();
+    });
+}
+
 function getOfficeList() {
     const url = '/lab6/json-rpc-api/';
     const json = {
@@ -22,10 +48,21 @@ function getOfficeList() {
     .then(function(data) {
         const office_list = data.result;
         const ul = document.getElementById('office-list');
+        ul.innerHTML = '';
+        let totalCost = 0;
+        
         for(let i = 0; i < office_list.length; i++) {
             const office = office_list[i];
             const li = document.createElement('li');
-            li.innerText = `${office.number}: ${office.tenant || 'свободен'}`;
+            
+            if (office.tenant) {
+                li.innerText = `${office.number}: ${office.tenant}, ${office.price} руб.`;
+                if (office.tenant === currentUser) {
+                    totalCost += office.price; 
+                }
+            } else {
+                li.innerText = `${office.number}: свободен, ${office.price} руб.`;
+            }
 
             if (office.tenant) {
                 const cancelButton = document.createElement('button');
@@ -43,6 +80,8 @@ function getOfficeList() {
 
             ul.appendChild(li);
         }
+        
+        document.getElementById('total-cost').textContent = totalCost + ' руб.';
     });
 }
 
@@ -77,8 +116,10 @@ function booking(officeNumber) {
             }   
         }
         else {
-            document.getElementById('office-list').innerHTML = '';
-            getOfficeList();
+            getCurrentUser(function() {
+                document.getElementById('office-list').innerHTML = '';
+                getOfficeList();
+            });
         }
     });
 }
@@ -117,14 +158,18 @@ function cancellation(officeNumber) {
             }   
         }
         else {
-            document.getElementById('office-list').innerHTML = '';
-            getOfficeList();
+            getCurrentUser(function() {
+                document.getElementById('office-list').innerHTML = '';
+                getOfficeList();
+            });
         }
     });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    getOfficeList();
+    getCurrentUser(function() {
+        getOfficeList();
+    });
 });
 </script>
 {% endblock %}
@@ -132,4 +177,8 @@ document.addEventListener('DOMContentLoaded', function() {
 {% block main %}
     <h1>Список кабинетов</h1>
     <ul id="office-list"></ul>
+    <div>
+        <h3>Общая стоимость ваших арендованных офисов:</h3>
+        <p id="total-cost">0 руб.</p>
+    </div>
 {% endblock %}
