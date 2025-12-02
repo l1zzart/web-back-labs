@@ -22,28 +22,29 @@ app.register_blueprint(lab5)
 app.register_blueprint(lab6)
 
 @app.route("/")
-def start():
-       return """<!doctype html>
-        <html>
-            <head>
-                <title>НГТУ, ФБ, Лабораторные работы</title>
-            </head>
-            <body>
-                <h1>НГТУ, ФБ, WEB-программирование, часть 2. Список лабораторных</h1>
-                <ul>
-                    <li><a href='/lab1/'>Лабораторная работа 1</a></li>
-                    <li><a href='/lab2/'>Лабораторная работа 2</a></li>
-                    <li><a href='/lab3/'>Лабораторная работа 3</a></li>
-                    <li><a href='/lab4/'>Лабораторная работа 4</a></li>
-                    <li><a href='/lab5/'>Лабораторная работа 5</a></li>
-                    <li><a href='/lab6/'>Лабораторная работа 6</a></li>
-                </ul>
-                <hr>
-                <footer>
-                    Артемченко Елизавета Сергеевна, ФБИ-33, 3 курс, 2025 год
-                </footer>
-            </body" 
-        </html>"""
+def index():
+    html = f"""<!doctype html>
+    <html>
+        <head>
+            <title>НГТУ, ФБ, Лабораторные работы</title>
+        </head>
+        <body>
+            <h1>НГТУ, ФБ, WEB-программирование, часть 2. Список лабораторных</h1>
+            <ul>
+                <li><a href='/lab1/'>Лабораторная работа 1</a></li>
+                <li><a href='/lab2/'>Лабораторная работа 2</a></li>
+                <li><a href='/lab3/'>Лабораторная работа 3</a></li>
+                <li><a href='/lab4/'>Лабораторная работа 4</a></li>
+                <li><a href='/lab5/'>Лабораторная работа 5</a></li>
+                <li><a href='/lab6/'>Лабораторная работа 6</a></li>
+            </ul>
+            <hr>
+            <footer>
+                Артемченко Елизавета Сергеевна, ФБИ-33, 3 курс, 2025 год
+            </footer>
+        </body> 
+    </html>"""
+    return html
 
 
 @app.errorhandler(404)

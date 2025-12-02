@@ -178,7 +178,7 @@ def error_404():
     root_url = url_for('index', _external=True) 
     
     log_entry = f"IP: {ip_address}, Дата/Время: {current_time}, URL: {requested_url}"
-    access_log.lab1end(log_entry)
+    access_log.append(log_entry)
     
     css = url_for("static", filename="error.css")
     img_path = url_for("static", filename="UFO.png")
