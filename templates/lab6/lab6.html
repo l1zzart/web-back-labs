@@ -3,6 +3,80 @@
 {% block lab %}Лабораторная работа 6{% endblock %}
 
 {% block script %}
+<style>
+    .lab6-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 70px;
+    }
+    
+    .office-list {
+        list-style: none;
+        padding: 0;
+    }
+    
+    .office-list li {
+        background: #f8f9fa;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+        border-left: 5px solid #7c5ac2;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .office-list li:nth-child(odd) {
+        background: #f0f2ff;
+    }
+    
+    .office-list button {
+        background: #7c5ac2;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    
+    .office-list button:hover {
+        background: #6a4bb3;
+    }
+    
+    .office-list button[onclick*="cancellation"]:hover {
+        background: #8c6ac7; 
+    }
+    
+    .total-cost-container {
+        background: #eef2ff;
+        padding: 15px;
+        border-radius: 8px;
+        margin-top: 20px;
+        text-align: center;
+        border: 2px solid #7c5ac2;
+    }
+    
+    #total-cost {
+        font-size: 24px;
+        font-weight: bold;
+        color: #7c5ac2;
+        margin-top: 5px;
+    }
+    
+    .user-info {
+        margin-top: 15px;
+        padding: 10px;
+        background: #f0f2ff;
+        border-radius: 5px;
+        text-align: center;
+    }
+</style>
+
 <script>
 let currentUser = '';
 
@@ -56,12 +130,12 @@ function getOfficeList() {
             const li = document.createElement('li');
             
             if (office.tenant) {
-                li.innerText = `${office.number}: ${office.tenant}, ${office.price} руб.`;
+                li.innerText = `Офис ${office.number}: ${office.tenant}, ${office.price} руб.`;
                 if (office.tenant === currentUser) {
                     totalCost += office.price; 
                 }
             } else {
-                li.innerText = `${office.number}: свободен, ${office.price} руб.`;
+                li.innerText = `Офис ${office.number}: свободен, ${office.price} руб.`;
             }
 
             if (office.tenant) {
@@ -175,10 +249,19 @@ document.addEventListener('DOMContentLoaded', function() {
 {% endblock %}
 
 {% block main %}
-    <h1>Список кабинетов</h1>
-    <ul id="office-list"></ul>
-    <div>
-        <h3>Общая стоимость ваших арендованных офисов:</h3>
-        <p id="total-cost">0 руб.</p>
+    <div class="lab6-container">
+        <h1 style="color: #5a3d9c; text-align: center;">Аренда офисов</h1>
+        
+        <div class="user-info">
+            <p>Текущий пользователь: <span id="current-user-display" style="font-weight: bold; color: #7c5ac2;">{{ current_user or 'Не авторизован' }}</span></p>
+        </div>
+        
+        <h2 style="color: #5a3d9c;">Список кабинетов</h2>
+        <ul id="office-list" class="office-list"></ul>
+        
+        <div class="total-cost-container">
+            <h3 style="margin: 0; color: #5a3d9c;">Общая стоимость ваших арендованных офисов:</h3>
+            <div id="total-cost" style="font-size: 24px; font-weight: bold; color: #7c5ac2;">0 руб.</div>
+        </div>
     </div>
 {% endblock %}
