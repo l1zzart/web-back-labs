@@ -180,8 +180,8 @@ def error_404():
     log_entry = f"IP: {ip_address}, Дата/Время: {current_time}, URL: {requested_url}"
     access_log.append(log_entry)
     
-    css = url_for("static", filename="error.css")
-    img_path = url_for("static", filename="UFO.png")
+    css = url_for("static", filename="lab1/error.css")
+    img_path = url_for("static", filename="lab1/UFO.png")
 
     log_html = "<h2>Лог посещений:</h2><ul>"
     for log in access_log:
