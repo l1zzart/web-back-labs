@@ -30,15 +30,24 @@ function fillFilmList() {
 
             let editButton = document.createElement('button');
             editButton.innerText = 'Редактировать';
+            
+            editButton.setAttribute('data-film-id', films[i].id || (i + 1));
             editButton.onclick = function() {
-                editFilm(i);
+                const filmId = this.getAttribute('data-film-id');
+                console.log('Редактируем фильм ID:', filmId);
+                editFilm(filmId);
             };
 
             let delButton = document.createElement('button');
             delButton.innerText = 'Удалить';
             delButton.style.backgroundColor = '#dc3545';
+            
+            delButton.setAttribute('data-film-id', films[i].id || (i + 1));
+            delButton.setAttribute('data-film-title', films[i].title_ru);
             delButton.onclick = function() {
-                deleteFilm(i, films[i].title_ru);
+                const filmId = this.getAttribute('data-film-id');
+                const filmTitle = this.getAttribute('data-film-title');
+                deleteFilm(filmId, filmTitle);
             };
 
             tdActions.append(editButton);

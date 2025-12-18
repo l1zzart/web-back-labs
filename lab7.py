@@ -74,6 +74,7 @@ def get_films():
         films_list = []
         for film in films_data:
             films_list.append({
+                'id': film['id'],
                 'title': film['title'],
                 'title_ru': film['title_ru'],
                 'year': film['year'],
@@ -101,6 +102,7 @@ def get_film(id):
             abort(404)
         
         return {
+            'id': film['id'],
             'title': film['title'],
             'title_ru': film['title_ru'],
             'year': film['year'],
