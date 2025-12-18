@@ -37,12 +37,6 @@ function fillFilmList() {
             let delButton = document.createElement('button');
             delButton.innerText = 'Удалить';
             delButton.style.backgroundColor = '#dc3545';
-            delButton.onmouseover = function() {
-                this.style.backgroundColor = '#c82333';
-            };
-            delButton.onmouseout = function() {
-                this.style.backgroundColor = '#dc3545';
-            };
             delButton.onclick = function() {
                 deleteFilm(i, films[i].title_ru);
             };
@@ -71,7 +65,7 @@ function deleteFilm(id, title) {
 }
 
 function showModal() {
-    document.getElementById('description-error').innerText = '';
+    clearAllErrors();
     document.querySelector('div.modal').style.display = 'block';
 }
 
@@ -89,9 +83,16 @@ function addFilm() {
     document.getElementById('title-ru').value = '';
     document.getElementById('year').value = '';
     document.getElementById('description').value = '';
-    document.getElementById('description-error').innerText = '';
-
+    
+    clearAllErrors();
     showModal();
+}
+
+function clearAllErrors() {
+    document.getElementById('title-ru-error').innerText = '';
+    document.getElementById('title-error').innerText = '';
+    document.getElementById('year-error').innerText = '';
+    document.getElementById('description-error').innerText = '';
 }
 
 function sendFilm() {
@@ -105,6 +106,8 @@ function sendFilm() {
 
     const url = `/lab7/rest-api/films/${id}`;
     const method = id === '' ? 'POST' : 'PUT';
+
+    clearAllErrors();
 
     fetch(url, {
         method: method,
@@ -120,8 +123,22 @@ function sendFilm() {
         return resp.json();   
     })
     .then(function(errors) {
-        if(errors && errors.description) {
-            document.getElementById('description-error').innerText = errors.description;
+        if(errors) {
+            if(errors.title) {
+                document.getElementById('title-error').innerText = errors.title;
+            }
+            
+            if(errors.title_ru) {
+                document.getElementById('title-ru-error').innerText = errors.title_ru;
+            }
+            
+            if(errors.year) {
+                document.getElementById('year-error').innerText = errors.year;
+            }
+            
+            if(errors.description) {
+                document.getElementById('description-error').innerText = errors.description;
+            }
         }
     });
 }
@@ -138,6 +155,7 @@ function editFilm(id) {
             document.getElementById('year').value = film.year;
             document.getElementById('description').value = film.description;
             
+            clearAllErrors();
             showModal();
         });
 }

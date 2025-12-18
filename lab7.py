@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request, abort, redirect
+from datetime import datetime
 
 lab7 = Blueprint('lab7', __name__)
 
@@ -53,6 +54,36 @@ films = [
 ]
 
 
+def validate_film(film_data):
+    errors = {}
+    
+    title_ru = film_data.get('title_ru', '').strip()
+    if not title_ru:
+        errors['title_ru'] = 'Русское название обязательно для заполнения'
+    
+    title = film_data.get('title', '').strip()
+    if not title and not title_ru:
+        errors['title'] = 'Хотя бы одно название должно быть заполнено'
+    
+    try:
+        year = int(film_data.get('year', 0))
+        current_year = datetime.now().year
+        if year < 1895:
+            errors['year'] = f'Год не может быть раньше 1895 (год создания первого фильма)'
+        elif year > current_year:
+            errors['year'] = f'Год не может быть больше {current_year} (текущего года)'
+    except (ValueError, TypeError):
+        errors['year'] = 'Год должен быть числом'
+    
+    description = film_data.get('description', '').strip()
+    if not description:
+        errors['description'] = 'Описание обязательно для заполнения'
+    elif len(description) > 2000:
+        errors['description'] = f'Описание слишком длинное ({len(description)} символов). Максимум 2000 символов'
+    
+    return errors
+
+
 @lab7.route('/lab7/rest-api/films/', methods=['GET'])
 def get_films():
     return films
@@ -87,8 +118,9 @@ def put_film(id):
     if not film.get('title', '').strip() and film.get('title_ru', '').strip():
         film['title'] = film['title_ru']
     
-    if film['description'] == '':
-        return {'description': 'Заполните описание'}, 400
+    errors = validate_film(film)
+    if errors:
+        return errors, 400
     
     films[id] = film
     return films[id]
@@ -100,9 +132,10 @@ def add_film():
     
     if not film.get('title', '').strip() and film.get('title_ru', '').strip():
         film['title'] = film['title_ru']
-
-    if film.get('description', '').strip() == '':
-        return {'description': 'Заполните описание'}, 400
+    
+    errors = validate_film(film)
+    if errors:
+        return errors, 400
 
     films.append(film)
     return {"id": len(films) - 1}
