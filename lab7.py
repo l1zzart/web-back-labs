@@ -1,57 +1,36 @@
-from flask import Blueprint, render_template, request, abort, redirect
+from flask import Blueprint, render_template, request, abort, redirect, current_app
 from datetime import datetime
+import psycopg2
+from psycopg2.extras import RealDictCursor
+import sqlite3
+from os import path
 
 lab7 = Blueprint('lab7', __name__)
+
+def db_connect():
+    if current_app.config['DB_TYPE'] == 'postgres':
+        conn = psycopg2.connect(
+            host='127.0.0.1',
+            database='elizaveta_artemchenko_knowledge_base',
+            user='elizaveta_artemchenko_knowledge_base',
+            password='695'
+        )
+        cur = conn.cursor(cursor_factory=RealDictCursor)
+    else:
+        dir_path = path.dirname(path.realpath(__file__))
+        db_path = path.join(dir_path, "database.db")
+        conn = sqlite3.connect(db_path)
+        conn.row_factory = sqlite3.Row
+        cur = conn.cursor()
+    return conn, cur
+
+def db_close(conn, cur):
+    cur.close()
+    conn.close()
 
 @lab7.route('/lab7/')
 def main():
     return render_template('lab7/lab7.html')
-
-
-films = [
-    {
-        "title": "Вертикаль",
-        "title_ru": "Вертикаль",
-        "year": 1966,
-        "description": "Группе альпинистов, идущих на штурм непокоренной кавказской вершины, пика Ор-Тау, "
-        "послан сигнал о немедленном возвращении: надвигается грозовой циклон. Связист скрывает от товарищей это предупреждение, и они оказываются в критической ситуации. "
-        "Трагедии удается избежать только благодаря мужеству спасателей и опыту самих спортсменов..."
-    },
-    {
-        "title": "Requiem for a Dream",
-        "title_ru": "Реквием по мечте",
-        "year": 2000,
-        "description": "Каждый стремится к своей заветной мечте. Сара Голдфарб мечтала сняться в известном телешоу, "
-        "ее сын Гарольд с другом Тайроном — сказочно разбогатеть, подруга Гарольда Мэрион грезила о собственном модном магазине, "
-        "но на их пути были всевозможные препятствия. Все они выбирают неочевидные пути достижения своих целей, "
-        "и мечты по-прежнему остаются недостижимыми, а жизни героев рушатся безвозвратно."
-    },
-    {
-        "title": "Spider-Man: Into the Spider-Verse",
-        "title_ru": "Человек-паук:Через вселенные",
-        "year": 2018,
-        "description": "Мы всё знаем о Питере Паркере. Он спас город, влюбился, а потом спасал город снова и снова… "
-        "Но все это – в нашем измерении. А что если в результате работы гигантского коллайдера откроется окно из одного измерения в другое? "
-        "Найдется ли в нем свой Человек-паук? И как он будет выглядеть? Приготовьтесь к тому, что в разных вселенных могут быть разные Люди-пауки "
-        "и однажды им придется собраться вместе для борьбы с почти непобедимым врагом."
-    },
-    {
-        "title": "The Devil Wears Prada",
-        "title_ru": "Дьявол носит Prada",
-        "year": 2006,
-        "description": "Мечтающая стать журналисткой провинциальная девушка Энди по окончании университета"
-        "получает должность помощницы всесильной Миранды Пристли, деспотичного редактора одного из крупнейших нью-йоркских журналов мод."
-        "Энди всегда мечтала о такой работе, не зная, с каким нервным напряжением это будет связано…"
-    },
-    {
-        "title": "Shutter Island",
-        "title_ru": "Остров проклятых",
-        "year": 2009,
-        "description": "Два американских судебных пристава отправляются на один из островов в штате Массачусетс, "
-        "чтобы расследовать исчезновение пациентки клиники для умалишенных преступников. При проведении расследования им придется "
-        "столкнуться с паутиной лжи, обрушившимся ураганом и смертельным бунтом обитателей клиники."
-    }
-]
 
 
 def validate_film(film_data):
@@ -86,56 +65,160 @@ def validate_film(film_data):
 
 @lab7.route('/lab7/rest-api/films/', methods=['GET'])
 def get_films():
-    return films
+    conn, cur = db_connect()
+    
+    try:
+        cur.execute("SELECT id, title, title_ru, year, description FROM films ORDER BY id")
+        films_data = cur.fetchall()
+        
+        films_list = []
+        for film in films_data:
+            films_list.append({
+                'title': film['title'],
+                'title_ru': film['title_ru'],
+                'year': film['year'],
+                'description': film['description']
+            })
+        
+        return films_list
+    finally:
+        db_close(conn, cur)
 
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['GET'])
 def get_film(id):
-    if id < 0 or id >= len(films):
-        abort(404)  
+    conn, cur = db_connect()
     
-    return films[id]
+    try:
+        if current_app.config['DB_TYPE'] == 'postgres':
+            cur.execute("SELECT id, title, title_ru, year, description FROM films WHERE id = %s", (id,))
+        else:
+            cur.execute("SELECT id, title, title_ru, year, description FROM films WHERE id = ?", (id,))
+        
+        film = cur.fetchone()
+        
+        if not film:
+            abort(404)
+        
+        return {
+            'title': film['title'],
+            'title_ru': film['title_ru'],
+            'year': film['year'],
+            'description': film['description']
+        }
+    finally:
+        db_close(conn, cur)
 
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['DELETE'])
 def del_film(id):
-    if id < 0 or id >= len(films):
-        abort(404)
-
-    del films[id]
-    return '', 204
+    conn, cur = db_connect()
+    
+    try:
+        if current_app.config['DB_TYPE'] == 'postgres':
+            cur.execute("SELECT id FROM films WHERE id = %s", (id,))
+        else:
+            cur.execute("SELECT id FROM films WHERE id = ?", (id,))
+        
+        film = cur.fetchone()
+        
+        if not film:
+            abort(404)
+        
+        if current_app.config['DB_TYPE'] == 'postgres':
+            cur.execute("DELETE FROM films WHERE id = %s", (id,))
+        else:
+            cur.execute("DELETE FROM films WHERE id = ?", (id,))
+        
+        conn.commit()
+        return '', 204
+    finally:
+        db_close(conn, cur)
 
 
 @lab7.route('/lab7/rest-api/films/<int:id>', methods=['PUT'])
 def put_film(id):
-    if id < 0 or id >= len(films):
-        response = redirect('/lab1/404')
-        response.status_code = 404 
-        return response
+    conn, cur = db_connect()
+    
+    try:
+        if current_app.config['DB_TYPE'] == 'postgres':
+            cur.execute("SELECT id FROM films WHERE id = %s", (id,))
+        else:
+            cur.execute("SELECT id FROM films WHERE id = ?", (id,))
+        
+        film_exists = cur.fetchone()
+        
+        if not film_exists:
+            response = redirect('/lab1/404')
+            response.status_code = 404 
+            return response
 
-    film = request.get_json()
-    
-    if not film.get('title', '').strip() and film.get('title_ru', '').strip():
-        film['title'] = film['title_ru']
-    
-    errors = validate_film(film)
-    if errors:
-        return errors, 400
-    
-    films[id] = film
-    return films[id]
+        film = request.get_json()
+        
+        if not film.get('title', '').strip() and film.get('title_ru', '').strip():
+            film['title'] = film['title_ru']
+        
+        errors = validate_film(film)
+        if errors:
+            return errors, 400
+        
+        if current_app.config['DB_TYPE'] == 'postgres':
+            cur.execute("""
+                UPDATE films 
+                SET title = %s, title_ru = %s, year = %s, description = %s 
+                WHERE id = %s
+            """, (film['title'], film['title_ru'], film['year'], film['description'], id))
+        else:
+            cur.execute("""
+                UPDATE films 
+                SET title = ?, title_ru = ?, year = ?, description = ? 
+                WHERE id = ?
+            """, (film['title'], film['title_ru'], film['year'], film['description'], id))
+        
+        conn.commit()
+        
+        return {
+            'title': film['title'],
+            'title_ru': film['title_ru'],
+            'year': film['year'],
+            'description': film['description']
+        }
+    finally:
+        db_close(conn, cur)
 
 
 @lab7.route('/lab7/rest-api/films/', methods=['POST'])
 def add_film():
-    film = request.get_json()
+    conn, cur = db_connect()
     
-    if not film.get('title', '').strip() and film.get('title_ru', '').strip():
-        film['title'] = film['title_ru']
-    
-    errors = validate_film(film)
-    if errors:
-        return errors, 400
-
-    films.append(film)
-    return {"id": len(films) - 1}
+    try:
+        film = request.get_json()
+        
+        if not film.get('title', '').strip() and film.get('title_ru', '').strip():
+            film['title'] = film['title_ru']
+        
+        errors = validate_film(film)
+        if errors:
+            return errors, 400
+        
+        if current_app.config['DB_TYPE'] == 'postgres':
+            cur.execute("""
+                INSERT INTO films (title, title_ru, year, description) 
+                VALUES (%s, %s, %s, %s) 
+                RETURNING id
+            """, (film['title'], film['title_ru'], film['year'], film['description']))
+            
+            new_id = cur.fetchone()['id']
+        else:
+            cur.execute("""
+                INSERT INTO films (title, title_ru, year, description) 
+                VALUES (?, ?, ?, ?)
+            """, (film['title'], film['title_ru'], film['year'], film['description']))
+            
+            new_id = cur.lastrowid
+        
+        conn.commit()
+        
+        return {"id": new_id}
+    finally:
+        db_close(conn, cur)
