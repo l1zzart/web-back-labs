@@ -6,26 +6,43 @@ function fillFilmList() {
     .then(function (films) {
         let tbody = document.getElementById('film-list');
         tbody.innerHTML = '';
-        for(let i = 0; i<films.length; i++) {
+        
+        for(let i = 0; i < films.length; i++) {
             let tr = document.createElement('tr');
 
-            let tdTitle = document.createElement('td');
             let tdTitleRus = document.createElement('td');
+            let tdTitle = document.createElement('td');
             let tdYear = document.createElement('td');
             let tdActions = document.createElement('td');
 
-            tdTitle.innerText = films[i].title == films[i].title_ru ? '' : films[i].title;
             tdTitleRus.innerText = films[i].title_ru;
+            
+            if (films[i].title) {
+                let originalSpan = document.createElement('span');
+                originalSpan.className = 'original-title';
+                originalSpan.innerText = films[i].title;
+                tdTitle.appendChild(originalSpan);
+            } else {
+                tdTitle.innerHTML = '<i>—</i>';
+            }
+            
             tdYear.innerText = films[i].year;
 
             let editButton = document.createElement('button');
-            editButton.innerText = 'редактировать';
+            editButton.innerText = 'Редактировать';
             editButton.onclick = function() {
                 editFilm(i);
             };
 
             let delButton = document.createElement('button');
-            delButton.innerText = 'удалить';
+            delButton.innerText = 'Удалить';
+            delButton.style.backgroundColor = '#dc3545';
+            delButton.onmouseover = function() {
+                this.style.backgroundColor = '#c82333';
+            };
+            delButton.onmouseout = function() {
+                this.style.backgroundColor = '#dc3545';
+            };
             delButton.onclick = function() {
                 deleteFilm(i, films[i].title_ru);
             };
@@ -33,14 +50,14 @@ function fillFilmList() {
             tdActions.append(editButton);
             tdActions.append(delButton);
 
-            tr.append(tdTitle);
             tr.append(tdTitleRus);
+            tr.append(tdTitle);
             tr.append(tdYear);
             tr.append(tdActions);
 
             tbody.append(tr);
         }
-    })
+    });
 }
 
 function deleteFilm(id, title) {
@@ -57,6 +74,7 @@ function showModal() {
     document.getElementById('description-error').innerText = '';
     document.querySelector('div.modal').style.display = 'block';
 }
+
 function hideModal() {
     document.querySelector('div.modal').style.display = 'none';
 }
@@ -79,10 +97,10 @@ function addFilm() {
 function sendFilm() {
     const id = document.getElementById('id').value;
     const film = {
-        title: document.getElementById('title').value,
-        title_ru: document.getElementById('title-ru').value,
+        title: document.getElementById('title').value.trim(),
+        title_ru: document.getElementById('title-ru').value.trim(),
         year: document.getElementById('year').value,
-        description: document.getElementById('description').value
+        description: document.getElementById('description').value.trim()
     }
 
     const url = `/lab7/rest-api/films/${id}`;
@@ -102,8 +120,9 @@ function sendFilm() {
         return resp.json();   
     })
     .then(function(errors) {
-        if(errors.description)
+        if(errors && errors.description) {
             document.getElementById('description-error').innerText = errors.description;
+        }
     });
 }
 
@@ -118,6 +137,7 @@ function editFilm(id) {
             document.getElementById('title-ru').value = film.title_ru;
             document.getElementById('year').value = film.year;
             document.getElementById('description').value = film.description;
+            
             showModal();
         });
 }

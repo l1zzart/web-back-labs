@@ -5,26 +5,134 @@
 {% block script %}
     <script src="{{ url_for('static', filename='lab7/main.js') }}"></script>
     <style>
-    .modal {
-        display: none;
-        z-index: 100;
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-family: Arial, sans-serif;
+            border: 1px solid #8a2be2;
+        }
         
-        width: 400px;
-        max-width: 90vw;
-        padding: 24px;
+        th, td {
+            padding: 10px 12px;
+            text-align: left;
+            border-right: 1px solid #d8bfd8;
+        }
         
-        background: rgb(211, 179, 236);
-        border-radius: 8px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-        border: 1px solid rgba(0, 0, 0, 0.08);
-    }
-    .error-message {
-        color: red;
-    }
+        th {
+            background-color: #9370db;
+            color: white;
+            font-weight: bold;
+        }
+        
+        th:last-child, td:last-child {
+            border-right: none;
+        }
+        
+        tr {
+            background-color: #f8f0ff;
+        }
+        
+        tr:hover {
+            background-color: #e6d9ff;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f0e6ff;
+        }
+        
+        td {
+            border-bottom: 1px solid #e6e6fa;
+            color: #4b0082;
+        }
+        
+        button {
+            background-color: #9370db;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            margin: 3px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        button:hover {
+            background-color: #8a2be2;
+        }
+        
+        .modal {
+            display: none;
+            z-index: 1000;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            
+            width: 450px;
+            max-width: 90vw;
+            padding: 20px;
+            
+            background-color: #f8f0ff;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            border: 1px solid #9370db;
+        }
+        
+        .error-message {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        label {
+            display: block;
+            margin: 10px 0;
+            font-weight: bold;
+            color: #4b0082;
+        }
+        
+        input[type="text"],
+        input[type="number"],
+        textarea {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            border: 1px solid #d8bfd8;
+            border-radius: 4px;
+            box-sizing: border-box;
+            background-color: white;
+        }
+        
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+        
+        .original-title {
+            font-style: italic;
+            color: #6a5acd;
+            font-size: 0.9em;
+        }
+        
+        h1 {
+            color: #4b0082;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        
+        i {
+            font-size: 0.9em;
+            color: #6a5acd;
+        }
+        
+        button[style*="background-color: #dc3545"] {
+            background-color: #dc3545;
+        }
+        
+        button[style*="background-color: #dc3545"]:hover {
+            background-color: #c82333;
+        }
     </style>
 {% endblock %}
 
@@ -34,9 +142,10 @@
     <table>
         <thead>
             <tr>
-                <th colspan="2">Название</th>
-                <th>Год</th>
-                <th>Действие</th>
+                <th>Название на русском</th>
+                <th>Оригинальное название</th>
+                <th>Год выпуска</th>
+                <th>Действия</th>
             </tr>
         </thead>
         <tbody id="film-list"></tbody>
@@ -46,7 +155,7 @@
         fillFilmList();
     </script>
 
-    <div>
+    <div style="text-align: center; margin-top: 20px;">
         <button onclick="addFilm()">Добавить фильм</button>
     </div>
 
@@ -54,27 +163,29 @@
         <input type="hidden" id="id">
         <label>
             Название фильма на русском:
-            <input type="text" id="title-ru">
-        </label><br>
+            <input type="text" id="title-ru" placeholder="Введите название на русском">
+        </label>
 
         <label>
             Название фильма на оригинальном языке
             <i>(если фильм русский, то оставьте пустым):</i>
-            <input type="text" id="title">
-        </label><br>
+            <input type="text" id="title" placeholder="Введите оригинальное название">
+        </label>
 
         <label>
             Год выпуска:
-            <input type="number" id="year">
-        </label><br>
+            <input type="number" id="year" placeholder="Например: 2020" min="1900" max="2100">
+        </label>
 
         <label>
             Описание:
-            <textarea id="description"></textarea>
+            <textarea id="description" placeholder="Введите описание фильма"></textarea>
             <div id="description-error" class="error-message"></div>
-        </label><br>
+        </label>
 
-        <button onclick="sendFilm()">ОК</button>
-        <button onclick="cancel()">Отмена</button>
+        <div style="text-align: center; margin-top: 20px;">
+            <button onclick="sendFilm()">Сохранить</button>
+            <button onclick="cancel()" style="background-color: #777;">Отмена</button>
+        </div>
     </div>
 {% endblock %}
