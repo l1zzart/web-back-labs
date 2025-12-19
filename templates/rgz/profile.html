@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Профиль пользователя</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='rgz/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="student-info">
+                    {{ student_name }} | {{ student_group }}
+                </div>
+                <div class="auth-links">
+                    Привет, {{ user.username }}!
+                    <a href="{{ url_for('rgz.cart') }}">Корзина</a>
+                    <a href="{{ url_for('rgz.logout') }}">Выйти</a>
+                </div>
+            </div>
+            
+            <nav>
+                <a href="{{ url_for('rgz.index') }}" class="logo">Магазин мебели</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="margin-top: 20px;"></div>  
+        <h1>Профиль пользователя</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        <div class="profile-info" style="background: #f8f9fa; padding: 20px; border-radius: 5px; margin: 20px 0;">
+            <h3>Ваши данные</h3>
+            <p><strong>Логин:</strong> {{ user.username }}</p>
+            <p><strong>Дата регистрации:</strong> {{ user.created_at[:10] if user.created_at else 'Неизвестно' }}</p>
+        </div>
+        
+        <div style="margin: 30px 0;">
+            <h3>История заказов</h3>
+            {% if orders %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Заказ №</th>
+                            <th>Дата</th>
+                            <th>Сумма</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for order in orders %}
+                        <tr>
+                            <td>#{{ order.id }}</td>
+                            <td>{{ order.created_at[:10] if order.created_at else 'Неизвестно' }}</td>
+                            <td>{{ "%.2f"|format(order.total_amount) }} руб</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p>У вас пока нет заказов.</p>
+            {% endif %}
+        </div>
+        
+        <div style="margin: 40px 5px; padding: 20px; background: #fff5f5; border-radius: 5px; border-left: 4px solid #dc3545;">
+            <h3 style="color: #9f2330;">Удаление аккаунта</h3>
+            <p style="margin-bottom: 15px;">Внимание! Это действие необратимо. Все ваши данные будут удалены.</p>
+            
+            <form method="POST" action="{{ url_for('rgz.delete_account') }}" 
+                  onsubmit="return confirm('Вы уверены? Аккаунт будет удален безвозвратно.')">
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>Введите пароль для подтверждения:</label>
+                    <input type="password" name="password" required style="width: 300px; max-width: 100%;">
+                </div>
+                <button type="submit" class="btn" style="background: #b32331;">Удалить аккаунт</button>
+            </form>
+        </div>
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="{{ url_for('rgz.index') }}" class="btn">Вернуться в магазин</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; РГЗ по дисциплине "Web-программирование". Вариант 0: Онлайн-магазин (продажа мебели). </p>
+        <p>НГТУ</p>
+    </footer>
+</body>
+</html>

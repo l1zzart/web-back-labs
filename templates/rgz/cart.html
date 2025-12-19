@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Корзина покупок</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='rgz/style.css') }}">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="student-info">
+                    {{ student_name }} | {{ student_group }}
+                </div>
+                <div class="auth-links">
+                    Привет, {{ user.username }}!
+                    <a href="{{ url_for('rgz.profile') }}">Профиль</a>
+                    <a href="{{ url_for('rgz.logout') }}">Выйти</a>
+                </div>
+            </div>
+            
+            <nav>
+                <a href="{{ url_for('rgz.index') }}" class="logo">Магазин мебели</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <div style="margin-top: 20px;"></div>  
+        <h1>Корзина покупок</h1>
+        
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
+        {% if cart_items %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Цена</th>
+                        <th>Количество</th>
+                        <th>Сумма</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.name }}</td>
+                        <td>{{ "%.2f"|format(item.price) }} руб</td>
+                        <td>{{ item.quantity }} шт.</td>
+                        <td>{{ "%.2f"|format(item.price * item.quantity) }} руб</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('rgz.update_cart', cart_id=item.id) }}" style="display: inline;">
+                                <button type="submit" name="action" value="decrease" {% if item.quantity <= 1 %}disabled{% endif %} class="btn">-</button>
+                                <button type="submit" name="action" value="increase" class="btn">+</button>
+                                <button type="submit" name="action" value="remove" class="btn">Удалить</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3"><strong>Итого:</strong></td>
+                        <td><strong>{{ "%.2f"|format(total) }} руб</strong></td>
+                        <td></td>
+                    </tr>
+                </tfoot>
+            </table>
+            
+            <div style="margin-top: 30px;">
+                <form method="POST" action="{{ url_for('rgz.checkout') }}">
+                    <button type="submit" class="btn btn-success" 
+                            onclick="return confirm('Оформить заказ? Корзина будет очищена.')">
+                        Оформить заказ
+                    </button>
+                </form>
+            </div>
+            
+            <p style="margin-top: 20px; color: #666;">
+                <em>После оформления заказа корзина будет автоматически очищена</em>
+            </p>
+        {% else %}
+            <div class="notice" style="margin-top: 30px;">
+                <h3>Корзина пуста</h3>
+                <p>В вашей корзине пока нет товаров.</p>
+            </div>
+        {% endif %}
+        
+        {% if user and orders %}
+        <div class="order-history">
+            <h3>Ваш последний заказ</h3>
+            
+            {% if orders %}
+                {% set last_order = orders[0] %}
+                <div class="order-item-small">
+                    <div><strong>Заказ {{ last_order.id }}</strong></div>
+                    <div class="date">{{ last_order.created_at[:10] if last_order.created_at else 'Неизвестно' }}</div>
+                    <div class="total">{{ "%.2f"|format(last_order.total_amount) }} руб</div>
+                </div>
+                
+                {% if orders|length > 1 %}
+                    <p style="margin-top: 10px;">
+                        <a href="{{ url_for('rgz.profile') }}">Посмотреть все заказы можно в профиле</a>
+                    </p>
+                {% endif %}
+            {% endif %}
+        </div>
+        {% endif %}
+        
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="{{ url_for('rgz.index') }}" class="btn">Продолжить покупки</a>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; РГЗ по дисциплине "Web-программирование". Вариант 0: Онлайн-магазин (продажа мебели). </p>
+        <p>НГТУ</p>
+    </footer>
+</body>
+</html>
