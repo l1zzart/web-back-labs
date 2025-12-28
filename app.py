@@ -6,6 +6,7 @@ from lab4 import lab4
 from lab5 import lab5
 from lab6 import lab6
 from lab7 import lab7
+from lab8 import lab8
 from rgz import rgz
 
 import datetime
@@ -23,6 +24,7 @@ app.register_blueprint(lab4)
 app.register_blueprint(lab5)
 app.register_blueprint(lab6)
 app.register_blueprint(lab7)
+app.register_blueprint(lab8)
 app.register_blueprint(rgz, url_prefix='/rgz')
 
 @app.route("/")
@@ -42,6 +44,7 @@ def index():
                 <li><a href='/lab5/'>Лабораторная работа 5</a></li>
                 <li><a href='/lab6/'>Лабораторная работа 6</a></li>
                 <li><a href='/lab7/'>Лабораторная работа 7</a></li>
+                <li><a href='/lab8/'>Лабораторная работа 8</a></li>
                 <li><a href='/rgz/'><strong>РГЗ: Магазин мебели (вариант 0)</strong></a></li>
             </ul>
             <hr>

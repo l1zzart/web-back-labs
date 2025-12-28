@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block lab %}Лабораторная работа 8{% endblock %}
+
+{% block main %}
+    <style>
+        .lab8-menu {
+            display: flex;
+            align-items: center; 
+            background: #8358b9; 
+            padding: 10px 20px; 
+            border-bottom: none; 
+            margin: -20px -20px 20px -20px; 
+            box-sizing: border-box;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 15px; 
+            margin-right: auto; 
+            justify-content: center; 
+            flex-grow: 1; 
+        }
+
+        .nav-links a {
+            text-decoration: none; 
+            color: #333333; 
+            font-weight: normal; 
+            background-color: #f2f2f2; 
+            border: 1px solid #dcdcdc; 
+            border-radius: 4px; 
+            padding: 8px 12px; 
+            box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05); 
+            transition: background-color 0.2s, color 0.2s; 
+        }
+
+        .nav-links a:hover {
+            background-color: #e6e6e6; 
+            color: #1a1a1a; 
+            border-color: #c0c0c0; 
+        }
+
+        .username {
+            color: #333333;
+            font-weight: bold;
+        }
+
+        .logout-btn:hover {
+            background-color: #ff5252;
+        }
+    </style>
+    
+    <h1>База знаний</h1>
+    <div class="lab8-menu">
+        <div class="nav-links">
+            <a href="/lab8/articles">Список статей</a>
+            <a href="/lab8/create">Создать статью</a>
+            <a href="/lab8/login">Войти</a>
+            <a href="/lab8/register">Регистрация</a>
+        </div>
+        <div class="username">
+            {% if login %}
+                {{ login }}
+            {% else %}
+                Anonymous
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
