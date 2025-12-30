@@ -6,10 +6,16 @@ document.addEventListener('DOMContentLoaded', function() {
     const result = document.getElementById('result');
     const giftImage = document.getElementById('gift-image');
     const congratulation = document.getElementById('congratulation');
+    const resetBtn = document.getElementById('reset-btn');
     
     let openedBoxes = [];
+    let isAuthenticated = false;
     
     loadState();
+    
+    if (resetBtn) {
+        resetBtn.addEventListener('click', resetBoxes);
+    }
     
     document.querySelectorAll('.gift-box:not(.opened)').forEach(box => {
         box.addEventListener('click', handleBoxClick);
@@ -20,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(response => response.json())
             .then(data => {
                 openedBoxes = data.opened_boxes || [];
+                isAuthenticated = data.is_authenticated || false;
                 updateCounters(data.opened_count, data.remaining_count);
                 
                 updateBoxesAppearance();
@@ -33,6 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
     function updateBoxesAppearance() {
         document.querySelectorAll('.gift-box').forEach(box => {
             const boxId = parseInt(box.dataset.boxId);
+            const isPremium = box.dataset.isPremium === 'true';
             
             if (openedBoxes.includes(boxId)) {
                 box.classList.add('opened');
@@ -41,6 +49,10 @@ document.addEventListener('DOMContentLoaded', function() {
             } else {
                 box.classList.remove('opened');
                 box.style.cursor = 'pointer';
+                
+                if (isPremium && !isAuthenticated) {
+                    box.style.cursor = 'not-allowed';
+                }
                 
                 box.removeEventListener('click', handleBoxClick);
                 box.addEventListener('click', handleBoxClick);
@@ -51,6 +63,12 @@ document.addEventListener('DOMContentLoaded', function() {
     function handleBoxClick(event) {
         const box = event.currentTarget;
         const boxId = parseInt(box.dataset.boxId);
+        const isPremium = box.dataset.isPremium === 'true';
+        
+        if (isPremium && !isAuthenticated) {
+            showMessage('Этот подарок только для авторизованных пользователей!', 'error');
+            return;
+        }
         
         openBox(boxId);
     }
@@ -94,6 +112,35 @@ document.addEventListener('DOMContentLoaded', function() {
             console.error('Ошибка открытия коробки:', error);
             showMessage('Ошибка соединения с сервером', 'error');
             box.style.transform = '';
+        });
+    }
+    
+    function resetBoxes() {
+        if (!confirm('Дед Мороз наполнит все коробки заново. Вы уверены?')) {
+            return;
+        }
+        
+        fetch('/lab9/reset', {
+            method: 'POST'
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showMessage(data.message, 'success');
+                openedBoxes = [];
+                loadState(); 
+                result.style.display = 'none';
+                
+                setTimeout(() => {
+                    location.reload();
+                }, 1000);
+            } else {
+                showMessage('Ошибка сброса коробок', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Ошибка сброса коробок:', error);
+            showMessage('Ошибка соединения с сервером', 'error');
         });
     }
     

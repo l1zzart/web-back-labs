@@ -14,16 +14,32 @@
         <div id="message" class="message"></div>
     </div>
     
+    {% if is_authenticated %}
+    <div class="santa-panel">
+        <button id="reset-btn" class="santa-btn">🎅 Дед Мороз</button>
+        <span class="auth-info">Вы авторизованы</span>
+    </div>
+    {% else %}
+    <div class="guest-info">
+        <span>Некоторые подарки только для авторизованных пользователей</span>
+    </div>
+    {% endif %}
+    
     <div class="gift-field" id="gift-field">
         {% for i in range(10) %}
         {% set pos = positions[i] %}
         {% set is_opened = i in opened_boxes %}
-        <div class="gift-box {% if is_opened %}opened{% endif %}" 
+        {% set is_premium = i >= 7 %}
+        <div class="gift-box {% if is_opened %}opened{% endif %} {% if is_premium %}premium{% endif %}" 
              id="box-{{ i }}"
              data-box-id="{{ i }}"
+             data-is-premium="{{ 'true' if is_premium else 'false' }}"
              style="top: {{ pos.top }}%; left: {{ pos.left }}%;">
             <img src="{{ url_for('static', filename='lab9/gif' ~ (i+1) ~ '.png') }}" 
                  alt="Подарочная коробка {{ i+1 }}">
+            {% if is_premium and not is_authenticated %}
+            <div class="lock-icon">🔒</div>
+            {% endif %}
         </div>
         {% endfor %}
     </div>
@@ -56,7 +72,7 @@
         background: #f5f5f5;
         padding: 15px;
         border-radius: 8px;
-        margin-bottom: 30px;
+        margin-bottom: 20px;
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -90,6 +106,47 @@
         border: 1px solid #ffcdd2;
     }
     
+    .santa-panel {
+        background: #fff3e0;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        border: 2px solid #ff9800;
+    }
+    
+    .santa-btn {
+        background: #f44336;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    
+    .santa-btn:hover {
+        background: #d32f2f;
+    }
+    
+    .auth-info {
+        color: #4caf50;
+        font-weight: bold;
+    }
+    
+    .guest-info {
+        background: #e3f2fd;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 20px;
+        text-align: center;
+        color: #1976d2;
+        border: 1px solid #bbdefb;
+    }
+    
     .gift-field {
         position: relative;
         height: 600px;
@@ -116,10 +173,30 @@
         cursor: default;
     }
     
+    .gift-box.premium {
+        border: 3px solid #ffd700;
+        border-radius: 10px;
+    }
+    
     .gift-box img {
         width: 100%;
         height: 100%;
         object-fit: contain;
+    }
+    
+    .lock-icon {
+        position: absolute;
+        top: -8px;
+        right: -8px;
+        background: #ff5722;
+        color: white;
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
     }
     
     .result {

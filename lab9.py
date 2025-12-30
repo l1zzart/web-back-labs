@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, session, jsonify, request, url_for
+from flask_login import login_required, current_user
 import random
 import json
 
@@ -43,6 +44,9 @@ boxes = [
     "gif10.png"   
 ]
 
+# Подарки только для авторизованных пользователей (последние 3)
+PREMIUM_GIFT_IDS = [7, 8, 9]
+
 def init_session():
     if 'lab9_opened_boxes' not in session:
         session['lab9_opened_boxes'] = []
@@ -65,12 +69,15 @@ def main():
     positions = json.loads(session.get('lab9_boxes_positions', '[]'))
     opened_boxes = session.get('lab9_opened_boxes', [])
     
+    is_authenticated = hasattr(current_user, 'is_authenticated') and current_user.is_authenticated
+    
     return render_template('lab9/index.html',
                          opened_count=opened_count,
                          remaining_count=remaining_count,
                          positions=positions,
                          opened_boxes=opened_boxes,
-                         boxes=boxes)
+                         boxes=boxes,
+                         is_authenticated=is_authenticated)
 
 @lab9.route('/lab9/open_box', methods=['POST'])
 def open_box():
@@ -101,6 +108,13 @@ def open_box():
             'message': 'Эта коробка уже открыта!'
         })
     
+    is_authenticated = hasattr(current_user, 'is_authenticated') and current_user.is_authenticated
+    if box_id in PREMIUM_GIFT_IDS and not is_authenticated:
+        return jsonify({
+            'success': False,
+            'message': 'Этот подарок только для авторизованных пользователей!'
+        })
+    
     opened_boxes.append(box_id)
     session['lab9_opened_boxes'] = opened_boxes
     
@@ -120,6 +134,27 @@ def open_box():
         'message': f'Открыто коробок: {opened_count} из 3'
     })
 
+@lab9.route('/lab9/reset', methods=['POST'])
+@login_required
+def reset_boxes():
+    """Сброс всех коробок (только для авторизованных)"""
+    init_session()
+    
+    session['lab9_opened_boxes'] = []
+    
+    positions = []
+    for i in range(10):
+        positions.append({
+            'top': random.randint(10, 70),
+            'left': random.randint(5, 85)
+        })
+    session['lab9_boxes_positions'] = json.dumps(positions)
+    
+    return jsonify({
+        'success': True,
+        'message': 'Дед Мороз наполнил все коробки заново!'
+    })
+
 @lab9.route('/lab9/state')
 def get_state():
     init_session()
@@ -128,8 +163,11 @@ def get_state():
     opened_count = len(opened_boxes)
     remaining_count = 10 - opened_count
     
+    is_authenticated = hasattr(current_user, 'is_authenticated') and current_user.is_authenticated
+    
     return jsonify({
         'opened_count': opened_count,
         'remaining_count': remaining_count,
-        'opened_boxes': opened_boxes
+        'opened_boxes': opened_boxes,
+        'is_authenticated': is_authenticated
     })
