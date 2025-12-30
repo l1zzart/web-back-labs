@@ -2,8 +2,173 @@
 
 {% block lab %}Лабораторная работа 9{% endblock %}
 
-{% block script %}{% endblock %}
-
 {% block main %}
-    <h1>Поздравления</h1>
+<div class="lab9-container">
+    <h1>Новогодние поздравления</h1>
+    
+    <div class="info-panel">
+        <div class="counters">
+            <div>Открыто коробок: <strong id="opened-count">{{ opened_count }}</strong> из 3</div>
+            <div>Осталось неоткрытых: <strong id="remaining-count">{{ remaining_count }}</strong></div>
+        </div>
+        <div id="message" class="message"></div>
+    </div>
+    
+    <div class="gift-field" id="gift-field">
+        {% for i in range(10) %}
+        {% set pos = positions[i] %}
+        {% set is_opened = i in opened_boxes %}
+        <div class="gift-box {% if is_opened %}opened{% endif %}" 
+             id="box-{{ i }}"
+             data-box-id="{{ i }}"
+             style="top: {{ pos.top }}%; left: {{ pos.left }}%;">
+            <img src="{{ url_for('static', filename='lab9/gif' ~ (i+1) ~ '.png') }}" 
+                 alt="Подарочная коробка {{ i+1 }}">
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div id="result" class="result" style="display: none;">
+        <h2>Ваш подарок:</h2>
+        <div class="gift-content">
+            <img id="gift-image" src="" alt="Подарок">
+            <div class="congratulation">
+                <p id="congratulation"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .lab9-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    h1 {
+        text-align: center;
+        margin-bottom: 30px;
+        color: #c62828;
+    }
+    
+    .info-panel {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .counters {
+        display: flex;
+        gap: 30px;
+        font-size: 18px;
+    }
+    
+    .counters strong {
+        color: #2e7d32;
+    }
+    
+    .message {
+        padding: 10px 15px;
+        border-radius: 5px;
+        font-weight: bold;
+    }
+    
+    .message.success {
+        background: #e8f5e9;
+        color: #2e7d32;
+        border: 1px solid #c8e6c9;
+    }
+    
+    .message.error {
+        background: #ffebee;
+        color: #c62828;
+        border: 1px solid #ffcdd2;
+    }
+    
+    .gift-field {
+        position: relative;
+        height: 600px;
+        border: 2px solid #ddd;
+        border-radius: 10px;
+        margin-bottom: 30px;
+        background: #fafafa;
+    }
+    
+    .gift-box {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .gift-box:hover:not(.opened) {
+        transform: scale(1.1);
+    }
+    
+    .gift-box.opened {
+        opacity: 0.4;
+        cursor: default;
+    }
+    
+    .gift-box img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+    }
+    
+    .result {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        border: 2px solid #4caf50;
+        margin-top: 20px;
+    }
+    
+    .result h2 {
+        margin-top: 0;
+        color: #2e7d32;
+        text-align: center;
+    }
+    
+    .gift-content {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+        margin-top: 20px;
+    }
+    
+    #gift-image {
+        width: 200px;
+        height: 200px;
+        object-fit: contain;
+        border: 2px solid #ff9800;
+        border-radius: 10px;
+        padding: 10px;
+        background: white;
+    }
+    
+    .congratulation {
+        flex: 1;
+    }
+    
+    #congratulation {
+        font-size: 18px;
+        line-height: 1.6;
+        color: #333;
+        margin: 0;
+        padding: 15px;
+        background: #f9f9f9;
+        border-radius: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block script %}
+<script src="{{ url_for('static', filename='lab9/script.js') }}"></script>
 {% endblock %}
