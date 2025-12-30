@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 5{% endblock %}
+{% block lab %}Лабораторная работа 8{% endblock %}
 
 {% block main %}
     <style>
@@ -73,35 +73,57 @@
             font-size: 12px;
             margin-left: 10px;
         }
+        .likes-count {
+            color: #666;
+            font-size: 14px;
+        }
+        .likes-count::before {
+            content: "❤️ ";
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
     </style>
 
-    <h1>{% if login %}Мои статьи{% else %}Публичные статьи{% endif %}</h1>
+    <div class="page-header">
+        <h1>Мои статьи</h1>
+        <a href="/lab8/create" class="create-link">+ Создать статью</a>
+    </div>
 
     {% if articles %}
         {% for article in articles %}
-            <div class="article {% if article['is_favorite'] %}favorite{% endif %}">
+            <div class="article {% if article.is_favorite %}favorite{% endif %}">
                 <div class="article-meta">
-                    Автор: {{ article['author_login'] }}
-                    {% if article['is_favorite'] %}<span class="favorite-badge"> Избранная</span>{% endif %}
-                    {% if article['is_public'] %}<span class="public-badge"> Публичная</span>{% endif %}
+                    {% if article.is_favorite %}
+                        <span class="favorite-badge">Избранная</span>
+                    {% endif %}
+                    {% if article.is_public %}
+                        <span class="public-badge">Публичная</span>
+                    {% endif %}
+                    <span class="likes-count">{{ article.likes }} лайков</span>
+                    {% if article.created_at %}
+                        <span style="margin-left: 15px; color: #999;">
+                            Создано: {{ article.created_at.strftime('%d.%m.%Y %H:%M') }}
+                        </span>
+                    {% endif %}
                 </div>
-                <h2>{{ article['title'] }}</h2>
-                <p>{{ article['article_text'] | replace('\n', '<br>') | safe }}</p>
-                {% if login and article['author_login'] == login %}
+                <h2>{{ article.title }}</h2>
+                <p>{{ article.article_text | replace('\n', '<br>') | safe }}</p>
+                
                 <div class="article-actions">
-                    <a href="/lab5/edit/{{ article['id'] }}" class="edit-btn">Редактировать</a>
-                    <a href="/lab5/delete/{{ article['id'] }}" class="delete-btn" 
+                    <a href="/lab8/edit/{{ article.id }}" class="edit-btn">Редактировать</a>
+                    <a href="/lab8/delete/{{ article.id }}" class="delete-btn" 
                        onclick="return confirm('Вы уверены, что хотите удалить эту статью?')">Удалить</a>
                 </div>
-                {% endif %}
             </div>
         {% endfor %}
     {% else %}
         <div class="no-articles">
-            <p>{% if login %}У вас пока нет статей{% else %}Нет публичных статей{% endif %}</p>
-            {% if login %}
-            <a href="/lab5/create" class="create-link">Создать первую статью</a>
-            {% endif %}
+            <p>У вас пока нет статей</p>
+            <a href="/lab8/create" class="create-link">Создать первую статью</a>
         </div>
     {% endif %}
 {% endblock %}

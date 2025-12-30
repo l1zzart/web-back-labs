@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
-{% block lab %}Лабораторная работа 8 - Создание статьи{% endblock %}
+{% block lab %}Лабораторная работа 8 - Редактирование статьи{% endblock %}
 
 {% block main %}
     <div class="lab8-container">
-        <h1>Создание статьи</h1>
+        <h1>Редактирование статьи</h1>
         
         {% if error %}
             <div class="error-message">
@@ -15,29 +15,29 @@
         <form method="post">
             <div class="form-group">
                 <label for="title">Заголовок:</label>
-                <input type="text" id="title" name="title" maxlength="50" required>
+                <input type="text" id="title" name="title" maxlength="50" value="{{ article.title }}" required>
             </div>
             
             <div class="form-group">
                 <label for="article_text">Текст статьи:</label>
-                <textarea id="article_text" name="article_text" rows="10" required></textarea>
+                <textarea id="article_text" name="article_text" rows="10" required>{{ article.article_text }}</textarea>
             </div>
             
             <div class="form-group">
                 <label>
-                    <input type="checkbox" name="is_public">
+                    <input type="checkbox" name="is_public" {% if article.is_public %}checked{% endif %}>
                     Сделать публичной
                 </label>
             </div>
             
             <div class="form-group">
                 <label>
-                    <input type="checkbox" name="is_favorite">
+                    <input type="checkbox" name="is_favorite" {% if article.is_favorite %}checked{% endif %}>
                     Добавить в избранное
                 </label>
             </div>
             
-            <button type="submit">Создать статью</button>
+            <button type="submit">Сохранить изменения</button>
             <a href="/lab8/articles" class="btn btn-secondary">Отмена</a>
         </form>
     </div>
