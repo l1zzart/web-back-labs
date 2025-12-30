@@ -114,12 +114,77 @@
             color: white;
             border-color: #8358b9;
         }
+        
+        .search-box {
+            margin-bottom: 20px;
+            padding: 15px;
+            background-color: #f5f5f5;
+            border-radius: 5px;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .search-input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .search-btn {
+            padding: 8px 20px;
+            background-color: #8358b9;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .search-btn:hover {
+            background-color: #7248a8;
+        }
+        
+        .search-info {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .guest-message {
+            background-color: #e8f4f8;
+            border: 1px solid #b3d9e6;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+            padding: 8px 16px;
+            text-decoration: none;
+            border-radius: 4px;
+            display: inline-block;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
     </style>
 
     <div class="page-header">
         <h1>
             {% if show_public %}
-                Публичные статьи
+                {% if current_user.is_authenticated %}
+                    Публичные статьи всех пользователей
+                {% else %}
+                    Публичные статьи
+                {% endif %}
             {% else %}
                 Мои статьи
             {% endif %}
@@ -130,13 +195,55 @@
         {% endif %}
     </div>
 
+    {% if not current_user.is_authenticated %}
+        <div class="guest-message">
+            <strong>Вы просматриваете публичные статьи как гость.</strong>
+            <p>Для создания и управления своими статьями <a href="/lab8/login">войдите</a> или <a href="/lab8/register">зарегистрируйтесь</a>.</p>
+        </div>
+    {% endif %}
+
+
+    <div class="search-box">
+        <form method="get" action="/lab8/articles" class="search-form">
+            <input type="text" 
+                   name="search" 
+                   class="search-input" 
+                   placeholder="Поиск по статьям..." 
+                   value="{{ search_query }}">
+            
+            {% if show_public %}
+                <input type="hidden" name="public" value="true">
+            {% endif %}
+            
+            <button type="submit" class="search-btn">Найти</button>
+            
+            {% if search_query %}
+                <a href="/lab8/articles{% if show_public %}?public=true{% endif %}" 
+                   class="btn-secondary">
+                    Сбросить поиск
+                </a>
+            {% endif %}
+        </form>
+        
+        {% if search_query %}
+            <div class="search-info">
+                Поиск: <strong>"{{ search_query }}"</strong>
+                {% if articles|length == 0 %}
+                    - ничего не найдено
+                {% else %}
+                    - найдено {{ articles|length }} статей
+                {% endif %}
+            </div>
+        {% endif %}
+    </div>
+
     {% if current_user.is_authenticated %}
     <div class="articles-nav">
         <a href="/lab8/articles" {% if not show_public %}class="active"{% endif %}>
             Мои статьи
         </a>
         <a href="/lab8/articles?public=true" {% if show_public %}class="active"{% endif %}>
-            Публичные статьи
+            Все публичные статьи
         </a>
     </div>
     {% endif %}
@@ -167,7 +274,7 @@
                     
                     {% if article.created_at %}
                         <span style="margin-left: 15px; color: #999;">
-                            Создано: {{ article.created_at.strftime('%d.%m.%Y') }}
+                            {{ article.created_at.strftime('%d.%m.%Y %H:%M') }}
                         </span>
                     {% endif %}
                 </div>
@@ -187,7 +294,9 @@
     {% else %}
         <div class="no-articles">
             <p>
-                {% if show_public %}
+                {% if search_query %}
+                    По запросу "{{ search_query }}" ничего не найдено
+                {% elif show_public %}
                     Публичных статей пока нет
                 {% else %}
                     У вас пока нет статей

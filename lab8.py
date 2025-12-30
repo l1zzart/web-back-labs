@@ -3,6 +3,7 @@ from flask_login import login_user, login_required, current_user, logout_user
 from werkzeug.security import generate_password_hash, check_password_hash
 from db import db
 from db.models import users, articles
+from sqlalchemy import or_  
 
 lab8 = Blueprint('lab8', __name__)
 
@@ -67,18 +68,56 @@ def login():
 
 
 @lab8.route('/lab8/articles/')
-@login_required
 def article_list():
     show_public = request.args.get('public') == 'true'
+    search_query = request.args.get('search', '').strip()
+    
+    if not current_user.is_authenticated:
+        show_public = True
     
     if show_public:
-        articles_list = articles.query.filter_by(is_public=True).order_by(articles.created_at.desc()).all()
+        query = articles.query.filter_by(is_public=True)
     else:
-        articles_list = articles.query.filter_by(login_id=current_user.id).order_by(articles.created_at.desc()).all()
+        if current_user.is_authenticated:
+            query = articles.query.filter_by(login_id=current_user.id)
+        else:
+            query = articles.query.filter_by(is_public=True) 
+    
+    if search_query:
+        query = query.filter(
+            or_(
+                articles.title.ilike(f'%{search_query}%'),
+                articles.article_text.ilike(f'%{search_query}%')
+            )
+        )
+    
+    articles_list = query.order_by(articles.created_at.desc()).all()
     
     return render_template('lab8/articles.html', 
                          articles=articles_list,
-                         show_public=show_public)
+                         show_public=show_public,
+                         search_query=search_query,
+                         current_user=current_user)
+
+@lab8.route('/lab8/public')
+def public_articles():
+    search_query = request.args.get('search', '').strip()
+    
+    query = articles.query.filter_by(is_public=True)
+    
+    if search_query:
+        query = query.filter(
+            or_(
+                articles.title.ilike(f'%{search_query}%'),
+                articles.article_text.ilike(f'%{search_query}%')
+            )
+        )
+    
+    articles_list = query.order_by(articles.created_at.desc()).all()
+    
+    return render_template('lab8/public.html',
+                         articles=articles_list,
+                         search_query=search_query)
 
 
 @lab8.route('/lab8/logout')
